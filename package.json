@@ -41,7 +41,9 @@
     "locale/*.json",
     "icon.svg",
     "README.md",
+    "README.zh.md",
     "docs/**/*.md",
+    "docs/images/*.png",
     "tests/**/*.js"
   ],
   "scripts": {

@@ -1,109 +1,140 @@
 # dsh-session-manager
 
-DSH Web 的会话管理面板：把会话按**状态（7 档：待处理/运行中/阻塞/失败/已完成未读/中断/完成）/ 时间桶 / 标签**分组浏览，支持标签规则、AI 批量重命名、AI 自动打标签（一律先预览-应用，慢操作以后台任务运行）、归档与回收站；行级操作与原生左栏对齐（右键菜单、面板内详情分栏、跳转到会话）。
+[中文说明](./README.zh.md) · **English**
 
-![状态](https://img.shields.io/badge/DSH-plugin-1.0.0-blue)
+A session manager panel for the DSH Web GUI: browse your sessions grouped by **status (7 states) / time bucket / tag**, with tag rules, AI batch rename and AI auto-tagging (always preview-then-apply, slow work runs as background jobs), archive and trash. Row-level actions reuse the native sidebar's own context menu and row seats instead of inventing a parallel UI.
 
-## 它解决什么
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.0.0-blue)](./package.json)
+[![tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)](./tests)
+[![license](https://img.shields.io/badge/license-MIT-green)](./package.json)
 
-- 原生左栏是一列按工作目录排的会话，看不出“谁在等我、谁挂了、哪些属于同一个项目”。本插件给出一张可分组、可筛选的资产视图。
-- 一批会话需要统一改名或打标签时，靠手点不现实。这里可以勾选 → AI 产出一份清单 → 你确认 → 一次写回。
+![Session manager overview](./docs/images/01-overview.png)
 
-术语（状态、待处理、阻塞、建议标签、时间桶……）见 [CONTEXT.md](./CONTEXT.md)，产品与验收见 [docs/PRD.md](./docs/PRD.md)，实现审计（每条用户故事对应到代码/测试）见 [docs/PRD-AUDIT.md](./docs/PRD-AUDIT.md)，架构决策见 [docs/adr/](./docs/adr/)。
+## Why
 
-## 安装
+The native sidebar is one column of sessions ordered by working directory. It cannot tell you *who is waiting on me*, *what died*, or *which of these belong to the same project*. This plugin gives you a grouped, filterable asset view of the same sessions.
+
+And when a batch of sessions needs renaming or tagging, clicking through them one by one is not realistic. Here you select them, let the model produce a list, confirm it, and write it back in one pass.
+
+## Features
+
+- **Grouping** — by status / time bucket / tag / none. Group headers always show the total and all seven status counts, collapsed or not.
+- **Your own group order** — drag the ⠿ handle, or nudge with ↑/↓. The order is remembered per dimension in the browser, with a "reset order" button.
+- **Overview strip** — four clickable counters (pending / blocked / failed / completed-unread); one click is one filter.
+- **Filter and search** — status, time bucket and tag stack together; search matches title, session ID prefix, note and tags.
+- **Tagging** — batch append / replace / clear, rule-driven suggestions, AI suggestions with intent, and one-click "fill missing tags" that never overwrites.
+- **Tag manager** — a real CRUD surface for the vocabulary: create, rename (renaming onto an existing word merges them), delete (clears the word from every session and rule), search, and usage counts.
+- **AI batch rename** — preview first (old → new, the evidence, skip reasons, per-item cancel), then apply as a background job.
+- **Native integration** — right-click a row and you get the *native* shared menu, with a 「标签」 submenu and 「查看详情」/「打开会话」 appended. The native sidebar rows also show a status dot and tag count, plus status and tags in the hover card.
+- **Session actions** — jump to session, fork, pin, copy ID, reveal in folder, archive/restore, trash.
+- **Background jobs** — progress, cancel, per-item detail; a host restart marks unfinished jobs as interrupted instead of silently rerunning them.
+
+## Screenshots
+
+| Tag manager | Native context menu + tag submenu |
+|---|---|
+| ![Tag manager](./docs/images/02-tag-manager.png) | ![Native menu](./docs/images/03-native-menu.png) |
+
+| In-panel detail split | Native sidebar decorations |
+|---|---|
+| ![Detail split](./docs/images/04-detail.png) | ![Native sidebar](./docs/images/05-native-sidebar.png) |
+
+## Install
 
 ```bash
-# 装进当前 profile（web）：
+# Into the current profile (web):
+dsh plugin --profile web add "https://github.com/blindcat-10835/dsh-session-manager"
+```
+
+Or from a local checkout, which is what development uses:
+
+```bash
 cd /root/.dsh/profiles/web
-pnpm add link:/path/to/dsh-plugins/dsh-session-manager
-# 再把包名加到 package.json 的 dsh.profile.bundles 里：
+pnpm add link:/path/to/dsh-session-manager
+# then add the package name to dsh.profile.bundles in package.json:
 #   "dsh-session-manager"
 ```
 
-> 用 `link:`（而不是 `file:`）安装，profile 的 node_modules 是指向工作区的符号链接，改完 `client.js` / `host/*` 重启即生效；`file:` 会复制一份，改代码不生效。
-> 也可以 `dsh plugin add link:<path>`（`dsh plugin` 把参数原样转给 profile 里的 pnpm）。
+> Use `link:` rather than `file:`: the profile's `node_modules` then points at your working copy, so edits to `client.js` / `host/*` take effect on restart. `file:` copies the package and your edits stop mattering.
 
-安装会把本包加进当前 profile 的 bundle 栈，并合并 [cordis.patch.yml](./cordis.patch.yml) 里的 `insert` 行；重启后（`dsh --profile web` 或仓库外的 `restart-web.sh`），侧栏出现「会话管理」入口，主面板打开管理视图。不需要手工编辑 profile 的 cordis 配置。首次打开会在后台索引历史会话（本机 185 个约 30 秒），期间标题与失败/阻塞状态会逐步补齐。
+Installing appends this package to the profile's bundle stack and merges the `insert` row from [cordis.patch.yml](./cordis.patch.yml), so no manual cordis edit is needed. After a restart (`dsh --profile web`, or `restart-web.sh` outside the repo) a 「会话管理」 entry appears in the sidebar. The first open indexes historical sessions in the background (about 30 seconds for ~185 sessions); titles and the failed/blocked states fill in as it goes.
 
-## 使用
+## Usage
 
-1. **分组**：工具栏切换 状态 / 时间桶 / 标签 / 不分组。组头始终显示该组数量和待处理/运行中/阻塞/失败/已完成未读的计数，折叠也在。
-2. **分组顺序自己定**：拖组头的 ⠿ 柄把组挪到别处，或用组头的 ↑/↓ 一格一格移。顺序按维度（状态/时间/标签）分别记住，刷新也在；工具栏的「恢复默认顺序」一键回到自然顺序。
-3. **概览**：顶部四个计数（待处理 / 阻塞 / 失败 / 已完成未读），点一下就是一个筛选。
-4. **筛选与搜索**：状态、时间桶、标签可以叠加；搜索框按标题、会话 ID 前缀、备注、标签匹配。归档视图切到「只看归档」即可搜索归档会话。
-5. **打标签**：勾选会话 → 批量条上「追加 / 替换 / 清空」。也可以在行菜单里编辑单条。标签来源分为手动、规则、AI。任何入口打完标签，面板都会在一秒多内自动刷新出 chip。
-6. **标签管理**：工具栏「标签管理」列出所有标签——来源（手动/规则/AI）、用量（几个会话、几条建议）、创建时间，可搜索。在这里新建、改名（撞名即合并）、删除（连带清掉会话与规则上的该词，会话本身不动；删除前二次确认写清影响面）。
-7. **标签规则**：规则编辑器里配条件（标题 / 首条消息 / 工作目录 / 备注 + 关键词）和动作（只建议 或 直接加）。命中预览零写入，确认后再应用；规则从不删除已有标签。
-8. **AI 批量重命名**：勾选 → 「AI 批量重命名」→ 预览（旧标题 → 新标题 + 依据；运行中/空白/子代理/已锁定会被跳过并写明原因）→ 逐条取消 → 应用。
-9. **AI 打标签 / 意图**：同一个预览里给出建议标签与意图分类（开发/排查/调研/文档/运维/其它），采纳后才写入。
-10. **归档 / 回收站**：归档把会话移出当前列表（可恢复）；删除把会话目录移入插件回收站（可恢复，见下）。
-11. **一键补齐标签**：只对“一个标签都没有”的会话写入已有建议标签，绝不覆盖。
-12. **右键菜单（就是原生那个）**：行上右键弹出**原生共享菜单**——置顶/取消置顶、重命名、分叉会话、复制 Session ID、在文件夹显示、归档/取消归档全部原样可用；插件追加「标签」子菜单（点一下勾选/取消，立即写入并给原生提示），面板在场时再加「查看详情」「打开会话」。原生菜单只能追加、不能删改原生项。
-13. **跳转到会话**：双击行、右键「打开会话」或选中后 `Ctrl+Enter`，与在原生左栏点击等价。
-14. **行内「⋯」菜单**：插件专属的标签编辑、备注、移入回收站放在行尾的「⋯」里（右键给原生菜单，见上一条），三条都会打开对应的对话框。
-15. **详情分栏**：行内「详情」/右键「查看详情」/选中行 `Enter` 在面板右侧分栏打开详情：状态、工作目录、标签（可就地增删）、意图、备注（可就地编辑）、首条消息、最近一轮结束原因、Session ID；并在面板内直接打开/分叉/归档/删除。
-16. **后台任务**：AI 重命名预览、AI 标签预览、应用重命名、补齐缺失标签都创建**任务**，工具栏任务指示器显示进度，可取消；任务结果与失败原因保留，离开面板再回来仍在。
-17. **快捷键**：面板有焦点且有选中行时，`Ctrl+Alt+G` 重命名、`Ctrl+Shift+F` 分叉、`Ctrl+Alt+A` 归档；菜单内 `↑`/`↓`/`Enter`/`Esc` 可操作。
-18. **原生左栏的行装饰**：打了标签/有状态的会话，在原生左栏行尾显示状态点与标签数，悬停卡里显示状态名与标签 chip——不点开会话也能看出大概；不改原生分组与排序。
+1. **Grouping** — switch between status / time bucket / tag / none in the toolbar. Group headers always show the group's total and the pending/running/blocked/failed/completed-unread counts, even collapsed.
+2. **Your own group order** — drag a group's ⠿ handle to move it, or use the ↑/↓ buttons on the header. The order is remembered per dimension (status / time / tag) and survives a reload; "reset order" in the toolbar restores the natural order.
+3. **Overview** — the four counters at the top (pending / blocked / failed / completed-unread); clicking one filters by it.
+4. **Filter and search** — status, time bucket and tag stack; the search box matches title, session ID prefix, note and tags. Switch the archive view to "archived only" to search archived sessions.
+5. **Tagging** — select sessions, then append / replace / clear from the batch bar. Single rows can be edited from the row menu. Tags come from manual edits, rules, or AI. Whichever entry point you use, the panel refreshes its chips within about a second.
+6. **Tag manager** — the toolbar's 「标签管理」 lists every tag with its source (manual / rule / AI), usage (how many sessions, how many suggestions) and creation time, and is searchable. Create, rename (a name collision merges the two), or delete (which clears the word from sessions and rules, leaving the sessions themselves alone; a two-step confirm spells out the impact).
+7. **Tag rules** — the rule editor takes conditions (title / first message / working directory / note + keywords) and an action (suggest only, or add directly). The hit preview writes nothing; rules never delete an existing tag.
+8. **AI batch rename** — select → 「AI 批量重命名」 → preview (old title → new title plus the evidence; running / blank / subagent / locked sessions are skipped with a stated reason) → cancel individual items → apply.
+9. **AI tagging / intent** — the same preview offers suggested tags and an intent classification (development / debugging / research / docs / ops / other); nothing is written until you accept it.
+10. **Archive / trash** — archiving moves a session out of the current list (restorable); deleting moves the session directory into the plugin's trash (restorable, see below).
+11. **Fill missing tags** — writes existing suggested tags only to sessions that have no tags at all, and never overwrites.
+12. **Context menu (the native one)** — right-clicking a row opens the **native shared menu**: pin/unpin, rename, fork, copy Session ID, reveal in folder, archive/unarchive all work as they do natively. The plugin appends a 「标签」 submenu (click to toggle a tag, written immediately with native feedback) and, while the panel is on screen, 「查看详情」 and 「打开会话」. The native menu can only be appended to, never edited.
+13. **Jump to session** — double-click a row, use 「打开会话」, or press `Ctrl+Enter`; equivalent to clicking the session in the native sidebar.
+14. **Row "⋯" menu** — the plugin-only actions (edit tags, edit note, move to trash) live behind the ⋯ at the end of the row, since the native menu cannot host the plugin's own dialogs.
+15. **Detail split** — the row's 「详情」 button, 「查看详情」, or `Enter` on a selected row opens a detail column inside the panel: status, working directory, tags (editable in place), intent, note (editable in place), first message, last turn's end reason, and the Session ID; open / fork / archive / delete from there.
+16. **Background jobs** — AI rename preview, AI tag preview, applying a rename and filling missing tags all create a **job**; the toolbar indicator shows progress and offers cancel, and results and failure reasons survive leaving the panel.
+17. **Shortcuts** — with the panel focused and a row selected: `Ctrl+Alt+G` rename, `Ctrl+Shift+F` fork, `Ctrl+Alt+A` archive. Inside a menu, `↑`/`↓`/`Enter`/`Esc` work.
+18. **Native sidebar decorations** — sessions with tags or a notable status show a status dot and tag count at the end of the native row, and the hover card shows the status name and tag chips, so you can tell what is going on without opening anything. The native grouping and ordering are untouched.
 
-## 能力边界（实测，v1.0）
+## Capability boundaries (measured, v1.0)
 
-| 想做的 | 能不能 | 说明 |
+| What you might want | Possible? | Why |
 |---|---|---|
-| 面板行右键 = 原生菜单 | ✅ | `ctx.contextMenus.open({kind:'session', …})`，与原生行同一个弹层 |
-| 给原生菜单加「标签」子菜单 | ✅ | `contextMenus.register({target:'session'})` + `children` 子菜单 |
-| 原生左栏行尾/悬停卡加装饰 | ✅ | `sidebar.session.row.trailing` / `sidebar.session.row.hover` 两个座位 |
-| 在原生「分组方式」里加「按状态/按标签」 | ❌ | 那三项是 `ui-workspace` 里的硬编码数组，没有插槽（PRD D13） |
-| 隐藏/重排原生菜单项 | ❌ | 只能追加（PRD D14） |
-| 右键子菜单里新建标签 | ❌ | 条目是纯按钮；新建仍在面板的标签编辑器（PRD D15） |
-| 面板里把分组上下拖动排序 | ✅ | v0.3.1：⠿ 拖动 + ↑/↓，顺序按维度记在 `localStorage`（PRD §7.6 / ADR-0008） |
-| 拖动单条会话在组内换位 | ❌ | 组内固定「最新在前」；排序只作用于组与组之间（PRD §7.6） |
-| 标签的新建/改名/删除 | ✅ | v0.3.2：工具栏「标签管理」，改名撞名即合并，删除连带清会话与规则引用（PRD §7.7 / ADR-0009） |
-| 右键打完标签，面板立刻更新 | ✅ | v0.3.2：标签写入广播桥，面板在 1.5s 合并窗口内刷新（PRD D16） |
-| 给标签配颜色 / 层级 / 别名 | ❌ | 词表目前只有名字、来源、创建时间（M2） |
+| Panel row right-click = native menu | ✅ | `ctx.contextMenus.open({kind:'session', …})` — the same popup the native row uses |
+| Add a 「标签」 submenu to the native menu | ✅ | `contextMenus.register({target:'session'})` plus a `children` submenu |
+| Decorate native sidebar rows / hover card | ✅ | The `sidebar.session.row.trailing` and `sidebar.session.row.hover` seats |
+| Add "by status / by tag" to the native grouping menu | ❌ | Those three entries are a hardcoded array in `ui-workspace` with no slot (PRD D13) |
+| Hide or reorder native menu items | ❌ | Append-only (PRD D14) |
+| Create a tag from the right-click submenu | ❌ | Menu entries are plain buttons; creation lives in the panel's tag manager (PRD D15) |
+| Drag groups into your own order | ✅ | v0.3.1: ⠿ drag plus ↑/↓, remembered per dimension in `localStorage` (PRD §7.6 / ADR-0008) |
+| Drag an individual session within a group | ❌ | Rows stay newest-first; ordering applies between groups only (PRD §7.6) |
+| Create / rename / delete tags | ✅ | v0.3.2: the 「标签管理」 dialog; a rename collision merges, a delete clears references (PRD §7.7 / ADR-0009) |
+| Right-click a tag and see it in the panel immediately | ✅ | v0.3.2: a tag-write broadcast wakes the panel within its 1.5s merge window (PRD D16) |
+| Tag colours / hierarchy / aliases | ❌ | The vocabulary is name, source and creation time only (M2) |
 
-## 配置
+## Configuration
 
-配置写在 profile 的 plugin config（`cordis.patch.yml` 的 config 段），也可以在安装时通过 bundle 默认值覆盖：
+Configuration lives in the profile's plugin config (the `config` section of `cordis.patch.yml`), and can be overridden by the bundle defaults at install time:
 
 ```yaml
 - insert:
     - id: session-manager
       name: 'dsh-session-manager'
       config:
-        dataDir: /custom/path             # 默认 $DSH_HOME/storages/session-manager
+        dataDir: /custom/path             # defaults to $DSH_HOME/storages/session-manager
         status:
           enabled: true
-          tailEvents: 120                 # 每个会话读日志尾部多少事件来判定 阻塞/失败
+          tailEvents: 120                 # how many tail events decide blocked/failed
           concurrency: 2
         ai:
-          batchSize: 8                    # 每次模型调用处理几个会话
+          batchSize: 8                    # sessions per model call
           concurrency: 2
           maxSessionsPerRun: 50
-          readContent: true               # 是否把首条消息喂给模型
+          readContent: true               # feed the first message to the model
           titleMaxChars: 48
 ```
 
-数据全部落在 `dataDir`：
+All data lands in `dataDir`:
 
-| 文件 | 内容 |
+| File | Contents |
 |---|---|
-| `state.json` | 标签、建议标签、备注、标题锁定、意图、标签规则、设置 |
-| `status-index.json` | 每个会话的 `lastTurnEnd` / 标题 / 首条消息缓存，按日志 revision 增量 |
-| `trash.json` | 回收站索引 |
-| `trash/<sessionId>/` | 被删除会话的原始目录 |
-| `jobs.json` | 后台任务：进行中的全部 + 最近 50 条终态任务（进度、明细、结果） |
+| `state.json` | Tags, suggested tags, notes, title locks, intents, the tag vocabulary, rules, settings |
+| `status-index.json` | Per-session log-tail facts (last turn end, title, first message) |
+| `trash.json` | Trash index |
+| `jobs.json` | Background jobs (unfinished ones plus the most recent 50 finished) |
+| `trash/<sessionId>/` | The moved session directory |
 
-写盘走临时文件 + `rename` 的原子替换；`state.json` 读坏时会改名隔离并以空状态启动，不会拖垮 DSH。
+## Where the AI comes from
 
-## AI 从哪来
+The plugin does not introduce a second set of credentials: it reuses the host's configured `llm` and `agentDefaultModel` route. With no usable route the AI buttons grey out and state why (HTTP 503 `llm_unavailable`), while tag rules and manual actions keep working.
 
-插件不引入第二套凭据：它复用宿主已配置的 `llm` 与 `agentDefaultModel` 路由。没有可用路由时，AI 按钮会置灰并说明原因（HTTP 503 `llm_unavailable`），标签规则与手动操作照常可用。
+## HTTP API
 
-## HTTP 接口
-
-客户端与服务端只走同源 HTTP（浏览器半无法使用 typed RPC）。前缀 `/api/dsh-session-manager`，完整契约见 [docs/PRD.md](./docs/PRD.md) §8；常用几条：
+The browser half cannot use typed RPC, so client and host talk over same-origin HTTP under `/api/dsh-session-manager`. The full contract is in [docs/PRD.md](./docs/PRD.md) §8; the common ones:
 
 ```bash
 curl -s localhost:3081/api/dsh-session-manager/state | jq .
@@ -111,7 +142,12 @@ curl -s 'localhost:3081/api/dsh-session-manager/sessions?includeArchived=1' | jq
 curl -s -X POST localhost:3081/api/dsh-session-manager/tags -H 'content-type: application/json' \
   -d '{"sessionIds":["<id>"],"op":"append","tags":["bug"]}'
 
-# 慢操作返回 202 + 任务对象，随后轮询
+# The tag vocabulary
+curl -s localhost:3081/api/dsh-session-manager/tag-defs | jq '.tagDefs[] | {name,sessions}'
+curl -s -X POST localhost:3081/api/dsh-session-manager/tag-defs -H 'content-type: application/json' \
+  -d '{"op":"rename","name":"bug","to":"defect"}'
+
+# Slow operations return 202 plus a job object; poll it afterwards
 curl -s -X POST localhost:3081/api/dsh-session-manager/tags/fill-missing \
   -H 'content-type: application/json' -d '{"dryRun":true}' | jq '.job | {id,type,state}'
 curl -s 'localhost:3081/api/dsh-session-manager/jobs?active=1' | jq '.jobs[] | {id,type,state,percent}'
@@ -119,30 +155,47 @@ curl -s localhost:3081/api/dsh-session-manager/jobs/<jobId> | jq '.job | {state,
 curl -s -X POST localhost:3081/api/dsh-session-manager/jobs/<jobId>/cancel | jq '.job.state'
 ```
 
-## 已知偏离与限制
+## Known deviations and limits
 
-- **删除 = 回收站**：DSH 没有会话删除 API，删除动作把会话目录移入插件回收站并可恢复；真正抹除需要手工清理 `trash/`（PRD D1）。
-- **子代理会话默认不显示**，且永不参与批量操作（D2）。
-- **按标签分组时会话可能重复计数**：一个会话有多个标签就会出现在多个组（D3）。
-- **失败/阻塞/中断依赖日志尾部索引**：首次加载会后台索引历史会话（本机 185 个、约 237MB 压缩日志），索引完成前这些会话先按“已完成”展示，完成后自动刷新（D6）。
-- **AI 改过的标题会钉住原生自动标题**：官方标题语义里“用户来源”的标题会阻止自动刷新；插件另存 `titleLocked`，只有手动改名才算锁定（ADR-0004）。
-- **右键菜单是插件自绘的**：原生菜单只能挂在原生行上；插件菜单的每个条目调用同一套客户端服务，语义与原生一致，但不会包含其它插件扩展的原生菜单条目（D7）。
-- **详情是面板内分栏而非原生右栏**：原生右栏只服务“当前屏幕上的会话”，插件面板占用主栏时没有可挂载的面（实测 `sidebarRight: no session surface is mounted`），所以详情做在面板内（D8）；代价是详情与原生右栏不能同时显示。
-- **任务不跨进程恢复**：宿主重启时未完成任务标记为「已中断」，不自动重跑；已写入的条目不回滚（D9）。
-- 原生左栏本身不改（D5），行级能力只出现在插件面板里。
+- **Delete means trash**: DSH has no session-delete API, so deleting moves the session directory into the plugin's trash and can be restored; erasing for real means cleaning `trash/` by hand (PRD D1).
+- **Subagent sessions are hidden by default** and never join a batch (D2).
+- **Tag grouping can double-count**: a session with several tags appears in several groups (D3).
+- **Failed / blocked / interrupted depend on the log-tail index**: the first load indexes historical sessions in the background (~185 sessions, ~237MB of compressed logs here). Until it finishes those sessions show as "completed" and refresh automatically afterwards (D6).
+- **An AI-renamed title pins the native auto-title**: in the official title semantics a "user" source blocks automatic refresh; the plugin also stores its own `titleLocked`, and only a manual rename sets it (ADR-0004).
+- **The right-click menu is the native one, appended to**: the plugin can add entries but cannot remove or reorder native ones, and it does not rewrite the native menu (D7/D14).
+- **The detail view is an in-panel split, not the native right sidebar**: the native right sidebar only serves the session currently on screen, and with the plugin panel owning the main column there is no surface to mount into (measured: `sidebarRight: no session surface is mounted`), so the detail lives inside the panel (D8). The cost is that it cannot share the screen with the native right sidebar.
+- **Jobs do not survive a host restart**: unfinished jobs are marked interrupted and are not rerun automatically; writes that already happened are not rolled back (D9).
+- **The native sidebar itself is not rewritten** (D5); row-level capability lives in the plugin panel, plus the read-only decorations described above.
 
-## 开发
+## Development
 
 ```bash
 node --check index.js client.js host/*.js
-node --test 'tests/*.test.js'   # 纯 node:test，无构建步骤
+node --test 'tests/*.test.js'   # plain node:test, no build step
 ```
 
-目录：`index.js` 宿主装配、`host/` 服务端模块、`client.js` 浏览器单文件面板、`locale/` 文案、`docs/` 产品与决策记录、`tests/`。内部模块契约见 [docs/CONTRACTS.md](./docs/CONTRACTS.md)。
+Layout: `index.js` host assembly, `host/` server-side modules, `client.js` the single-file browser panel, `locale/` copy, `docs/` product and decision records, `tests/`. The internal module contract is in [docs/CONTRACTS.md](./docs/CONTRACTS.md).
 
-## 决策记录
+## Documentation
 
-- [ADR-0001 主面板而非改写原生侧栏](./docs/adr/0001-main-panel-not-native-sidebar.md)
-- [ADR-0002 单值状态词表 + 日志尾部派生](./docs/adr/0002-single-status-derived-from-log-tail.md)
-- [ADR-0003 用户数据存插件状态文件](./docs/adr/0003-user-data-in-plugin-state-file.md)
-- [ADR-0004 AI 重命名走用户标题来源并自存锁定](./docs/adr/0004-ai-rename-uses-user-title-and-own-lock.md)
+- [docs/PRD.md](./docs/PRD.md) — product spec, user stories, HTTP contract, 16 recorded deviations
+- [docs/PRD-AUDIT.md](./docs/PRD-AUDIT.md) — every user story mapped to its implementation and tests
+- [docs/CONTRACTS.md](./docs/CONTRACTS.md) — internal module interfaces
+- [docs/US.md](./docs/US.md) — the user stories as originally written
+- [docs/adr/](./docs/adr/) — architecture decision records
+
+## Decision records
+
+- [ADR-0001 Main panel rather than rewriting the native sidebar](./docs/adr/0001-main-panel-not-native-sidebar.md)
+- [ADR-0002 Single status vocabulary derived from the log tail](./docs/adr/0002-single-status-derived-from-log-tail.md)
+- [ADR-0003 User data lives in the plugin's own state file](./docs/adr/0003-user-data-in-plugin-state-file.md)
+- [ADR-0004 AI rename uses the user title source and its own lock](./docs/adr/0004-ai-rename-uses-user-title-and-own-lock.md)
+- [ADR-0005 Slow batches run as host jobs](./docs/adr/0005-slow-batches-run-as-host-jobs.md)
+- [ADR-0006 The detail split lives inside the panel](./docs/adr/0006-detail-split-inside-the-panel.md)
+- [ADR-0007 Reuse the native context menu and decorate via row seats](./docs/adr/0007-reuse-native-context-menu-and-row-seats.md)
+- [ADR-0008 Group order lives in the client](./docs/adr/0008-group-order-lives-in-the-client.md)
+- [ADR-0009 Tag vocabulary CRUD in the host, merge on rename](./docs/adr/0009-tag-vocabulary-crud.md)
+
+## License
+
+MIT
