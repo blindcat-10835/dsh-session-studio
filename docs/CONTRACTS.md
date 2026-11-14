@@ -116,24 +116,24 @@ createJobRunner({ store, logger, handlers, now = Date.now, flushMs = 400, keepFi
 
 ### client.js — 面板（单文件浏览器 bundle）
 ```js
-window.__ModuleLoader__.load({ id: 'dsh-session-manager', factory(require) { ... return { inject: [...], apply } } })
+window.__ModuleLoader__.load({ id: 'dsh-session-studio', factory(require) { ... return { inject: [...], apply } } })
 ```
-- 只 `require('react')`，不用 JSX，全部 `React.createElement`。注册槽：`main`（key `session-manager`）、`sidebar.panellist`（id `session-manager`，order 40）、v0.3 的两个只读座位 `sidebar.session.row.trailing`（id `dsh-session-manager.row-status`，order 20）与 `sidebar.session.row.hover`（id `dsh-session-manager.row-hover`，order 20）。v0.2 的详情分栏是面板内 UI（PRD §7.3），**不注册右栏页类型**。
+- 只 `require('react')`，不用 JSX，全部 `React.createElement`。注册槽：`main`（key `session-studio`）、`sidebar.panellist`（id `session-studio`，order 40）、v0.3 的两个只读座位 `sidebar.session.row.trailing`（id `dsh-session-studio.row-status`，order 20）与 `sidebar.session.row.hover`（id `dsh-session-studio.row-hover`，order 20）。v0.2 的详情分栏是面板内 UI（PRD §7.3），**不注册右栏页类型**。
 - **inject 必须声明每个要读成员的服务（含点号嵌套服务）**：客户端沙箱对未声明的成员读取直接抛 `cannot get property "remote.session" without inject`，一次未捕获的读取就会让 `main` 槽崩溃、整个面板空白。当前声明：
   `inject: ['slots','locale','layout','contextMenus','uiWorkspace','remote','remote.session']`（详情分栏改为面板内实现后不再使用 sidebarRight 系服务；v0.3 起多声明 `contextMenus`，原生菜单的 open/register/notify 全走它）。
   注意 `inject` 只接受**字符串数组**：写成 `{required, optional}` 会被当成要等待名为 required/optional 的服务，插件永远 pending（实测）。
 - v0.2 客户端额外依赖：`ctx.get('uiWorkspace')`（`openSession/forkSession/pinSession/unpinSession/archiveSession/unarchiveSession`）、`ctx.get('remote')` 的 `session.openWorkspacePath({path, action:'reveal'})`（**必须同时声明 `remote.session`**）。所有服务成员读取都要走 `optionalService()`/`hasMethod()` 这类防御包装：缺失时对应菜单项禁用并给原因，不得抛错阻断开面板。
 - 数据只走 `fetch(API_PREFIX + ...)` 同源 JSON；实时状态用 `useSessionStatus` / `useSessions`（由 `ctx.slots` 提供，见 ui-session 的注入面）。
-- 所有 slot 注册与 `<style data-plugin="dsh-session-manager">` 都由 `ctx.effect(...)` 持有，卸载时撤销。
-- v0.3 原生菜单贡献（`dsh-session-manager:session-tags-menu` effect）：
-  `contextMenus.register({ id:'dsh-session-manager.tags', target:'session', order:500, resolve })` 返回 `[{id, label, children:[{id,label,disabled? 或 run}]}]`；
-  `register({ id:'dsh-session-manager.panel-actions', target:'session', order:550, resolve })` 在 `panelBridge.active` 时返回「查看详情」「打开会话」，否则返回 `[]`（原生左栏不应看到面板专属项）。`run` 抛错由 `failureLabel` 兜底提示。
+- 所有 slot 注册与 `<style data-plugin="dsh-session-studio">` 都由 `ctx.effect(...)` 持有，卸载时撤销。
+- v0.3 原生菜单贡献（`dsh-session-studio:session-tags-menu` effect）：
+  `contextMenus.register({ id:'dsh-session-studio.tags', target:'session', order:500, resolve })` 返回 `[{id, label, children:[{id,label,disabled? 或 run}]}]`；
+  `register({ id:'dsh-session-studio.panel-actions', target:'session', order:550, resolve })` 在 `panelBridge.active` 时返回「查看详情」「打开会话」，否则返回 `[]`（原生左栏不应看到面板专属项）。`run` 抛错由 `failureLabel` 兜底提示。
 - v0.3 面板在场性：Page 挂载时 `setPanelActive(true)` 并 `subscribePanelDetail(id => setDetailId(id))`，卸载时撤销；`requestPanelDetail(id)` 同时写 `panelBridge.detailId`，Page 每次渲染兜底消费一次（防止订阅建立前就点）。
 - v0.3 行装饰数据：`requestSessionMeta(id)` 入队 → 60ms 合并 → `GET /session-meta?ids=a,b,c`（≤300 个）→ `mergeSessionMeta` 写缓存并通知订阅者；单条缓存 30s。座位组件只用 `props.sessionId`，不绑定 Session，不写会话状态。
 - v0.3.2 标签词表 CRUD（PRD §7.7）**在宿主**：客户端只发 `POST /tag-defs {op,name,to?}` 并 adopt 返回的整份 `tagDefs`，本地不维护词表副本。宿主 `tags` 服务新增 `vocabulary()`（返回 `[{name,source,createdAt,sessions,suggested}]`，按 `sessions` 降序、再按名字 `localeCompare('zh-Hans-CN')`）、`createDef(name)`（同名→`StateError('invalid_tag')`）、`renameDef(from,to)`（返回 `{renamed,from,to,sessions,rules,tagDefs}`，**重名即合并**、旧 `createdAt` 保留）、`removeDef(name)`（返回 `{removed,name,sessions,rules,tagDefs}`，清所有会话 `tags`/`suggestedTags` 与规则 `action.tags`，规则变空则删规则）。三个写操作由路由统一 `await store.persistNow()`。
 - v0.3.2 标签写入广播桥（客户端）：`subscribeTagWrite(listener)` / `notifyTagWrite(ids)`。`toggleSessionTag` 成功后调用 `notifyTagWrite([id])` → 删 `metaCache[id]`、重置词表缓存 `tagMenuCache`、`requestSessionMeta` 重探、再通知订阅者；Page 里的订阅者只做 `scheduleRefresh()`（1.5s 合并）。这是"原生菜单写入不经过 React，面板必须被叫醒"的唯一通道。
 - v0.3.2 双 chip 修复（宿主）：`tags.apply` 的 `op:'replace'` 与 `renameDef` 都用 `withoutAccepted(suggestions, tags)` 按小写剔除与真标签同名的建议，避免同一词渲成"实心 + 虚化"两个 chip。
-- v0.3.1 分组顺序（PRD §7.6）是**纯客户端视图状态**，不进 HTTP 契约、不落宿主盘：`applyGroupOrder(groups, order)` / `moveGroupKey(order, key, targetKey)` / `moveGroupBy(order, key, delta)` 都是纯函数（输入数组不变），`readGroupOrder()` / `writeGroupOrder(order)` 只读写 `localStorage['dsh-session-manager.group-order']`（存成 `{ [dimension]: string[] }`，三个维度各一份）。存储不可用（隐私模式、无 `localStorage`）时读写都退化：读返回 `{}`、写返回 `false`，界面照常按自然顺序工作。未知 key 一律排到已保存 key 之后，保证新状态/新标签不会因为“不在记忆里”而消失。
+- v0.3.1 分组顺序（PRD §7.6）是**纯客户端视图状态**，不进 HTTP 契约、不落宿主盘：`applyGroupOrder(groups, order)` / `moveGroupKey(order, key, targetKey)` / `moveGroupBy(order, key, delta)` 都是纯函数（输入数组不变），`readGroupOrder()` / `writeGroupOrder(order)` 只读写 `localStorage['dsh-session-studio.group-order']`（存成 `{ [dimension]: string[] }`，三个维度各一份）。存储不可用（隐私模式、无 `localStorage`）时读写都退化：读返回 `{}`、写返回 `false`，界面照常按自然顺序工作。未知 key 一律排到已保存 key 之后，保证新状态/新标签不会因为“不在记忆里”而消失。
 
 ## 集成（Lead 所有）
 

@@ -398,7 +398,7 @@ export function createAiService({
   if (!store) throw new Error('createAiService needs a store')
   if (!sessions) throw new Error('createAiService needs a session source')
 
-  const warn = (message) => logger?.warn?.('session-manager: ' + message)
+  const warn = (message) => logger?.warn?.('session-studio: ' + message)
 
   let builtTransport = null
 

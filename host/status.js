@@ -82,7 +82,7 @@ export function createStatusIndexer({ store, sessions, logger, settings } = {}) 
     try {
       parsed = store?.readDoc?.(STATUS_INDEX_FILE, fallback)
     } catch (error) {
-      log.warn?.('session-manager: could not read ' + STATUS_INDEX_FILE + ': ' + messageOf(error))
+      log.warn?.('session-studio: could not read ' + STATUS_INDEX_FILE + ': ' + messageOf(error))
     }
     if (!parsed || typeof parsed !== 'object' || parsed.schema !== STATUS_INDEX_SCHEMA) return fallback
     if (!parsed.sessions || typeof parsed.sessions !== 'object' || Array.isArray(parsed.sessions)) return fallback
@@ -99,7 +99,7 @@ export function createStatusIndexer({ store, sessions, logger, settings } = {}) 
       try {
         return settings()
       } catch (error) {
-        log.warn?.('session-manager: settings getter failed: ' + messageOf(error))
+        log.warn?.('session-studio: settings getter failed: ' + messageOf(error))
         return null
       }
     }
@@ -202,7 +202,7 @@ export function createStatusIndexer({ store, sessions, logger, settings } = {}) 
       return true
     } catch (error) {
       state.lastError = messageOf(error)
-      log.warn?.('session-manager: status index skipped ' + id + ': ' + state.lastError)
+      log.warn?.('session-studio: status index skipped ' + id + ': ' + state.lastError)
       return false
     }
   }
@@ -213,7 +213,7 @@ export function createStatusIndexer({ store, sessions, logger, settings } = {}) 
       const item = queue.shift()
       activeWorkers += 1
       runItem(item).catch((error) => {
-        log.error?.('session-manager: status index worker failed: ' + messageOf(error))
+        log.error?.('session-studio: status index worker failed: ' + messageOf(error))
       })
     }
     syncRunning()
@@ -277,7 +277,7 @@ export function createStatusIndexer({ store, sessions, logger, settings } = {}) 
       rows = (await sessions?.list?.()) ?? []
     } catch (error) {
       state.lastError = 'could not list sessions: ' + messageOf(error)
-      log.warn?.('session-manager: ' + state.lastError)
+      log.warn?.('session-studio: ' + state.lastError)
       rows = []
     }
     if (token !== currentPass || cancelled) return finishPass(token, false, null)
@@ -317,7 +317,7 @@ export function createStatusIndexer({ store, sessions, logger, settings } = {}) 
     const token = currentPass
     runPass(token, force).catch((error) => {
       state.lastError = 'status index pass failed: ' + messageOf(error)
-      log.error?.('session-manager: ' + state.lastError)
+      log.error?.('session-studio: ' + state.lastError)
       if (token === currentPass) currentPass = 0
       syncRunning()
     })

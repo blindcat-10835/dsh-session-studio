@@ -128,7 +128,7 @@
 
 ## 7. 交互规格
 
-**入口**：侧栏 `sidebar.panellist`（id `session-manager`，order 40）→ 主面板 `main`（key `session-manager`）。
+**入口**：侧栏 `sidebar.panellist`（id `session-studio`，order 40）→ 主面板 `main`（key `session-studio`）。
 
 **页面结构（自上而下）**：
 1. 页头：标题 + 刷新 + 索引进度（非阻塞）。
@@ -201,7 +201,7 @@
 
 - **拖动**：组头的 ⠿ 柄可拖（HTML5 drag & drop）。拖到另一组上时，被拖组落在目标组的位置上（先摘出、再插到目标下标）；拖动中源组 `.sm-group-dragging` 降透明度，目标组 `.sm-group-drop` 描边高亮。
 - **键盘 / 点击等价物**：每个组头右侧有 ↑ / ↓ 两个 20×20 按钮，一次移动一格；首组 ↑、末组 ↓ 置灰。不做只能拖的交互。
-- **按维度记忆**：顺序按分组维度分别保存（状态 / 时间 / 标签 三份互不干扰），存在 `localStorage` 的 `dsh-session-manager.group-order` 键里，形如 `{"status":["status:running","status:completed"]}`。刷新页面、切换维度后仍生效；同一浏览器多标签共享。
+- **按维度记忆**：顺序按分组维度分别保存（状态 / 时间 / 标签 三份互不干扰），存在 `localStorage` 的 `dsh-session-studio.group-order` 键里，形如 `{"status":["status:running","status:completed"]}`。刷新页面、切换维度后仍生效；同一浏览器多标签共享。
 - **新组不丢**：保存的顺序里没提到的组（新出现的状态桶、新建的标签）按自然顺序排在已保存组之后，绝不因为“不在记忆里”而消失。
 - **恢复默认**：分组的自定义顺序非空时，工具栏出现「恢复默认顺序」按钮，只清当前维度那一份。只有一个组时不出拖动柄与 ↑/↓（无可排序）。
 - **不改数据**：顺序纯前端视图状态，不写会话、不写标签、不调接口；排序只影响分组之间，组内行仍按「最新在前」。
@@ -220,7 +220,7 @@
 
 一致性：词表 CRUD 全部在宿主侧执行并落盘（`state.json`），客户端只发 `{op,name,to?}`、拿回整份新词表；不存在“客户端自己拼一份”的情况。理由见 ADR-0009。
 
-## 8. HTTP 契约（前缀 `/api/dsh-session-manager`）
+## 8. HTTP 契约（前缀 `/api/dsh-session-studio`）
 
 统一错误：HTTP 4xx/5xx + `{ "error": { "code", "message", "details"? } }`。
 
@@ -286,7 +286,7 @@
 
 ## 9. 持久化
 
-- 数据目录：`$DSH_HOME/storages/session-manager`（可用环境变量 `DSH_SESSION_MANAGER_DIR` 覆盖）。
+- 数据目录：`$DSH_HOME/storages/session-studio`（可用环境变量 `DSH_SESSION_STUDIO_DIR` 覆盖）。
 - `state.json`、`status-index.json`、`trash.json`、`jobs.json`：临时文件 + rename 的原子写；写盘去抖 300ms。
 - `jobs.json`：`{schema:1, jobs:[job]}`，保留全部未完成任务 + 最近 50 条已完成任务（超出丢弃最旧的终态任务）；进度写盘去抖 400ms，任务结束立即刷盘。
 - 启动时把 `queued|running` 的任务改为 `interrupted`（`error.code='interrupted'`），不自动重跑。

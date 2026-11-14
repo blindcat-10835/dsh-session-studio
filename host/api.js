@@ -7,7 +7,7 @@
  * is testable without a socket; handle() is the thin Node req/res adapter.
  */
 
-export const API_PREFIX = '/api/dsh-session-manager'
+export const API_PREFIX = '/api/dsh-session-studio'
 const MAX_BODY = 2 * 1024 * 1024
 /** Sessions per AI job (PRD §6 batch cap). */
 const AI_JOB_LIMIT = 50
@@ -574,7 +574,7 @@ export function createApi({ store, sessions, statusIndex, tags, rules, ai, trash
       return { status: 200, body: value }
     } catch (error) {
       const response = toResponse(error)
-      if (response.status >= 500) logger?.error?.('session-manager: ' + request?.method + ' ' + request?.pathname + ' → ' + String(error?.message ?? error))
+      if (response.status >= 500) logger?.error?.('session-studio: ' + request?.method + ' ' + request?.pathname + ' → ' + String(error?.message ?? error))
       return response
     }
   }

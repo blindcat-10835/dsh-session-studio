@@ -1,10 +1,10 @@
-# dsh-session-manager
+# dsh-session-studio
 
 [中文说明](./README.zh.md) · **English**
 
 A session manager panel for the DSH Web GUI: browse your sessions grouped by **status (7 states) / time bucket / tag**, with tag rules, AI batch rename and AI auto-tagging (always preview-then-apply, slow work runs as background jobs), archive and trash. Row-level actions reuse the native sidebar's own context menu and row seats instead of inventing a parallel UI.
 
-[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.0.0-blue)](./package.json)
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.1.0-blue)](./package.json)
 [![tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)](./tests)
 [![license](https://img.shields.io/badge/license-MIT-green)](./package.json)
 
@@ -43,17 +43,19 @@ And when a batch of sessions needs renaming or tagging, clicking through them on
 
 ```bash
 # Into the current profile (web):
-dsh plugin --profile web add "https://github.com/blindcat-10835/dsh-session-manager"
+dsh plugin --profile web add "https://github.com/blindcat-10835/dsh-session-studio"
 ```
 
 Or from a local checkout, which is what development uses:
 
 ```bash
 cd /root/.dsh/profiles/web
-pnpm add link:/path/to/dsh-session-manager
+pnpm add link:/path/to/dsh-session-studio
 # then add the package name to dsh.profile.bundles in package.json:
-#   "dsh-session-manager"
+#   "dsh-session-studio"
 ```
+
+> Renamed from `dsh-session-manager` in 1.1.0 to avoid a name collision with an unrelated plugin. Existing data in `$DSH_HOME/storages/session-manager` is moved to `storages/session-studio` on first load; `DSH_SESSION_MANAGER_DIR` is still honoured.
 
 > Use `link:` rather than `file:`: the profile's `node_modules` then points at your working copy, so edits to `client.js` / `host/*` take effect on restart. `file:` copies the package and your edits stop mattering.
 
@@ -102,10 +104,10 @@ Configuration lives in the profile's plugin config (the `config` section of `cor
 
 ```yaml
 - insert:
-    - id: session-manager
-      name: 'dsh-session-manager'
+    - id: session-studio
+      name: 'dsh-session-studio'
       config:
-        dataDir: /custom/path             # defaults to $DSH_HOME/storages/session-manager
+        dataDir: /custom/path             # defaults to $DSH_HOME/storages/session-studio
         status:
           enabled: true
           tailEvents: 120                 # how many tail events decide blocked/failed
@@ -134,25 +136,25 @@ The plugin does not introduce a second set of credentials: it reuses the host's 
 
 ## HTTP API
 
-The browser half cannot use typed RPC, so client and host talk over same-origin HTTP under `/api/dsh-session-manager`. The full contract is in [docs/PRD.md](./docs/PRD.md) §8; the common ones:
+The browser half cannot use typed RPC, so client and host talk over same-origin HTTP under `/api/dsh-session-studio`. The full contract is in [docs/PRD.md](./docs/PRD.md) §8; the common ones:
 
 ```bash
-curl -s localhost:3081/api/dsh-session-manager/state | jq .
-curl -s 'localhost:3081/api/dsh-session-manager/sessions?includeArchived=1' | jq '.rows[0]'
-curl -s -X POST localhost:3081/api/dsh-session-manager/tags -H 'content-type: application/json' \
+curl -s localhost:3081/api/dsh-session-studio/state | jq .
+curl -s 'localhost:3081/api/dsh-session-studio/sessions?includeArchived=1' | jq '.rows[0]'
+curl -s -X POST localhost:3081/api/dsh-session-studio/tags -H 'content-type: application/json' \
   -d '{"sessionIds":["<id>"],"op":"append","tags":["bug"]}'
 
 # The tag vocabulary
-curl -s localhost:3081/api/dsh-session-manager/tag-defs | jq '.tagDefs[] | {name,sessions}'
-curl -s -X POST localhost:3081/api/dsh-session-manager/tag-defs -H 'content-type: application/json' \
+curl -s localhost:3081/api/dsh-session-studio/tag-defs | jq '.tagDefs[] | {name,sessions}'
+curl -s -X POST localhost:3081/api/dsh-session-studio/tag-defs -H 'content-type: application/json' \
   -d '{"op":"rename","name":"bug","to":"defect"}'
 
 # Slow operations return 202 plus a job object; poll it afterwards
-curl -s -X POST localhost:3081/api/dsh-session-manager/tags/fill-missing \
+curl -s -X POST localhost:3081/api/dsh-session-studio/tags/fill-missing \
   -H 'content-type: application/json' -d '{"dryRun":true}' | jq '.job | {id,type,state}'
-curl -s 'localhost:3081/api/dsh-session-manager/jobs?active=1' | jq '.jobs[] | {id,type,state,percent}'
-curl -s localhost:3081/api/dsh-session-manager/jobs/<jobId> | jq '.job | {state,result,items:[.items[]|{key,state,message}]}'
-curl -s -X POST localhost:3081/api/dsh-session-manager/jobs/<jobId>/cancel | jq '.job.state'
+curl -s 'localhost:3081/api/dsh-session-studio/jobs?active=1' | jq '.jobs[] | {id,type,state,percent}'
+curl -s localhost:3081/api/dsh-session-studio/jobs/<jobId> | jq '.job | {state,result,items:[.items[]|{key,state,message}]}'
+curl -s -X POST localhost:3081/api/dsh-session-studio/jobs/<jobId>/cancel | jq '.job.state'
 ```
 
 ## Known deviations and limits

@@ -11,7 +11,7 @@ const silent = { warn() {}, error() {}, debug() {}, info() {} }
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function setup(t) {
-  const base = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-manager-trash-'))
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-studio-trash-'))
   t.after(() => fs.rmSync(base, { recursive: true, force: true }))
   const dataDir = path.join(base, 'data')
   const sessionsRoot = path.join(base, 'sessions')

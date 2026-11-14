@@ -87,7 +87,7 @@ export function foldFacts(headEvents, tailEvents) {
 }
 
 export function createSessionSource({ ctx, logger, settings }) {
-  const warn = (message) => logger?.warn?.('session-manager: ' + message)
+  const warn = (message) => logger?.warn?.('session-studio: ' + message)
 
   const controller = () => ctx.get('sessionController')
   const registry = () => ctx.get('workspaceRegistry')

@@ -191,7 +191,7 @@ export function createTagService({ store, sessions, logger, statusIndex } = {}) 
     for (const rule of ruleList()) {
       if (mapRuleTags(rule, swap)) rules += 1
     }
-    log.debug?.('session-manager: renamed tag ' + source + ' -> ' + target + ' on ' + sessions + ' sessions')
+    log.debug?.('session-studio: renamed tag ' + source + ' -> ' + target + ' on ' + sessions + ' sessions')
     return { renamed: true, from: source, to: target, sessions, rules, tagDefs: tagDefs() }
   }
 
@@ -220,7 +220,7 @@ export function createTagService({ store, sessions, logger, statusIndex } = {}) 
     for (const rule of ruleList()) {
       if (mapRuleTags(rule, drop)) rules += 1
     }
-    log.debug?.('session-manager: removed tag ' + tag + ' from ' + sessions + ' sessions')
+    log.debug?.('session-studio: removed tag ' + tag + ' from ' + sessions + ' sessions')
     return { removed: true, name: tag, sessions, rules, tagDefs: tagDefs() }
   }
 
@@ -273,7 +273,7 @@ export function createTagService({ store, sessions, logger, statusIndex } = {}) 
     if (!sameTags(merged, record.suggestedTags)) {
       store.patchSession(sessionId, { suggestedTags: merged })
     }
-    if (source) log.debug?.('session-manager: suggestions for ' + sessionId + ' from ' + String(source))
+    if (source) log.debug?.('session-studio: suggestions for ' + sessionId + ' from ' + String(source))
     return merged
   }
 
@@ -282,7 +282,7 @@ export function createTagService({ store, sessions, logger, statusIndex } = {}) 
     try {
       return (await sessions.list()) ?? []
     } catch (error) {
-      log.warn?.('session-manager: could not list sessions: ' + messageOf(error))
+      log.warn?.('session-studio: could not list sessions: ' + messageOf(error))
       return []
     }
   }
@@ -297,7 +297,7 @@ export function createTagService({ store, sessions, logger, statusIndex } = {}) 
         firstMessage: typeof facts.firstMessage === 'string' ? facts.firstMessage : '',
       }
     } catch (error) {
-      log.warn?.('session-manager: could not read facts for ' + id + ': ' + messageOf(error))
+      log.warn?.('session-studio: could not read facts for ' + id + ': ' + messageOf(error))
       return { title: '', firstMessage: '' }
     }
   }

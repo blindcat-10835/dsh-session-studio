@@ -11,7 +11,7 @@ const silent = { warn() {}, error() {}, debug() {}, info() {} }
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function makeStore(t) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-manager-jobs-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-studio-jobs-'))
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }))
   const store = new StateStore({ dataDir: dir, logger: silent })
   store.loadSync()

@@ -12,7 +12,7 @@ const silent = { warn() {}, error() {}, debug() {}, info() {} }
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function makeStore(t) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-manager-tags-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-studio-tags-'))
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }))
   const store = new StateStore({ dataDir: dir, logger: silent })
   store.loadSync()
@@ -168,7 +168,7 @@ test('replace drops a suggestion that just became a real tag (v0.3.2 double-chip
 })
 
 test('legacy state files lose their duplicate suggestions on read (v0.3.2)', async (t) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-manager-tags-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-session-studio-tags-'))
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }))
   // A file written before v0.3.2: op:'replace' left the accepted word in both lists.
   fs.writeFileSync(path.join(dir, 'state.json'), JSON.stringify({

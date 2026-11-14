@@ -19,7 +19,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PLUGIN_DIR = path.resolve(HERE, '..');
 const CLIENT_FILE = path.join(PLUGIN_DIR, 'client.js');
 const SOURCE = fs.readFileSync(CLIENT_FILE, 'utf8');
-const NS = 'dsh-session-manager';
+const NS = 'dsh-session-studio';
 
 /* ------------------------------------------------------------------ *
  * Fake React and DOM
@@ -209,11 +209,11 @@ test('apply owns five effects: stylesheet, main, menu, row seats, sidebar slot',
   const { ctx, effects, registrations } = makeCtx();
   plugin.apply(ctx);
   assert.deepEqual(effects.map((entry) => entry.label), [
-    'dsh-session-manager:style',
-    'dsh-session-manager:main',
-    'dsh-session-manager:session-tags-menu',
-    'dsh-session-manager:sidebar-rows',
-    'dsh-session-manager:sidebar'
+    'dsh-session-studio:style',
+    'dsh-session-studio:main',
+    'dsh-session-studio:session-tags-menu',
+    'dsh-session-studio:sidebar-rows',
+    'dsh-session-studio:sidebar'
   ]);
 
   const disposers = effects.map((entry) => entry.fn());
@@ -228,19 +228,19 @@ test('apply owns five effects: stylesheet, main, menu, row seats, sidebar slot',
   const trailing = registrations.find((entry) => entry.name === 'sidebar.session.row.trailing');
   const hover = registrations.find((entry) => entry.name === 'sidebar.session.row.hover');
   assert.ok(trailing && hover, 'both native row seats are claimed');
-  assert.equal(trailing.registration.options.id, 'dsh-session-manager.row-status');
+  assert.equal(trailing.registration.options.id, 'dsh-session-studio.row-status');
   assert.equal(trailing.registration.options.order, 20);
   assert.equal(typeof trailing.registration.component, 'function');
-  assert.equal(hover.registration.options.id, 'dsh-session-manager.row-hover');
+  assert.equal(hover.registration.options.id, 'dsh-session-studio.row-hover');
   assert.equal(typeof hover.registration.component, 'function');
   assert.equal(main.name, 'main');
   assert.equal(main.registration.options.name, 'main');
-  assert.equal(main.registration.options.key, 'session-manager');
+  assert.equal(main.registration.options.key, 'session-studio');
   assert.equal(main.registration.options.locale, NS);
   assert.equal(typeof main.registration.component, 'function');
 
   assert.equal(sidebar.name, 'sidebar.panellist');
-  assert.equal(sidebar.registration.options.id, 'session-manager');
+  assert.equal(sidebar.registration.options.id, 'session-studio');
   assert.equal(sidebar.registration.options.order, 40);
   assert.equal(sidebar.registration.options.locale, NS);
   assert.equal(typeof sidebar.registration.options.label, 'function');
@@ -269,12 +269,12 @@ test('apply contributes the tag submenu to the native session menu', () => {
   } : null);
   plugin.apply(ctx);
 
-  const effect = effects.find((entry) => entry.label === 'dsh-session-manager:session-tags-menu');
+  const effect = effects.find((entry) => entry.label === 'dsh-session-studio:session-tags-menu');
   assert.ok(effect, 'the session menu effect is registered');
   const dispose = effect.fn();
   assert.equal(registered.length, 2);
-  const tags = registered.find((entry) => entry.id === 'dsh-session-manager.tags');
-  const panel = registered.find((entry) => entry.id === 'dsh-session-manager.panel-actions');
+  const tags = registered.find((entry) => entry.id === 'dsh-session-studio.tags');
+  const panel = registered.find((entry) => entry.id === 'dsh-session-studio.panel-actions');
   assert.ok(tags && panel, 'both contributions are registered');
   assert.equal(tags.target, 'session');
   assert.equal(tags.order, 500);
@@ -947,7 +947,7 @@ test('locale JSON client maps mirror the runtime dictionary', () => {
 });
 
 test('API path table covers every host route the panel calls', () => {
-  assert.equal(plugin.api.prefix, '/api/dsh-session-manager');
+  assert.equal(plugin.api.prefix, '/api/dsh-session-studio');
   const paths = plugin.api.paths;
   const expected = {
     state: '/state',
@@ -1885,7 +1885,7 @@ function createRuntimeHarness() {
 
   function fetchImpl(url, init) {
     fetchCalls.push({ url: String(url), method: (init && init.method) || 'GET' });
-    const prefix = '/api/dsh-session-manager';
+    const prefix = '/api/dsh-session-studio';
     const raw = String(url);
     const path = raw.startsWith(prefix) ? raw.slice(prefix.length) : raw;
     if (path === '/jobs' || path.startsWith('/jobs?')) {

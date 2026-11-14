@@ -22,7 +22,7 @@ v0.3 重新查了客户端契约，发现这个结论不成立：
 ## 决策
 
 1. **面板行的右键一律弹出原生共享菜单**（`contextMenus.open`），自绘 `RowMenu` 降级为 `contextMenus` 不可用时的回退。
-2. **只追加两个贡献**：`id: dsh-session-manager.tags`（order 500，标签子菜单）、`id: dsh-session-manager.panel-actions`（order 550，面板在场时的「查看详情」「打开会话」）。子菜单的每一项是一次 `POST /tags` 切换，成功后 `menus.notify()` 给原生提示，失败走 `failureLabel`。
+2. **只追加两个贡献**：`id: dsh-session-studio.tags`（order 500，标签子菜单）、`id: dsh-session-studio.panel-actions`（order 550，面板在场时的「查看详情」「打开会话」）。子菜单的每一项是一次 `POST /tags` 切换，成功后 `menus.notify()` 给原生提示，失败走 `failureLabel`。
 3. **面板在场性由面板自己发布**：`panelBridge.active` 由 Page 的挂载 effect 置位，菜单 `resolve` 时读取；`requestPanelDetail` 通过订阅把 detailId 送进面板，并留一个「挂载时消费 pending detailId」的保险。
 4. **原生行只加装饰**：`sidebar.session.row.trailing` 放状态点 + 标签数，`sidebar.session.row.hover` 放状态名 + 标签 chip；两者用一个 60ms 合并、30s 缓存的批量探针 `GET /session-meta?ids=…` 取数，绝不绑定 Session。
 5. **分组能力仍留在插件面板**，并在 PRD 里明确写死「原生分组菜单不可扩展」，避免以后有人再把它当需求做一遍。

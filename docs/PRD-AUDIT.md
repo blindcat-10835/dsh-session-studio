@@ -55,7 +55,7 @@
 | 27 | 键盘操作 | ⚠ | 面板内 `Ctrl+Alt+G`/`Ctrl+Shift+F`/`Ctrl+Alt+A`（D10 限定面板焦点）；菜单键盘由原生弹层负责 |
 | 28 | “空闲”不存在 | ✅ | 正常收尾=完成、中断/取消=中断，分开计数筛选（tests/status.test.js） |
 | 29 | 面板行右键＝原生同款菜单 | ✅ | v0.3；同上 #21（原生项 + 两个面板专属项 `panel-actions`） |
-| 30 | 任意会话行右键改标签 | ✅ | v0.3；`dsh-session-manager.tags` 子菜单，GUI 实测点 ✓ 取消后 `GET /sessions/:id/value` 返回 `["bug"]` |
+| 30 | 任意会话行右键改标签 | ✅ | v0.3；`dsh-session-studio.tags` 子菜单，GUI 实测点 ✓ 取消后 `GET /sessions/:id/value` 返回 `["bug"]` |
 | 31 | 原生左栏行显示状态/标签 | ✅ | v0.3；`row.trailing` 徽标（点+标签数，悬停时原生会隐藏）+ `row.hover` 状态名与 chip，截图确认 |
 | 32 | 分组能上下拖动排序 | ✅ | v0.3.1（§7.6）；`applyGroupOrder`/`moveGroupKey`/`moveGroupBy` + 组头 ⠿ 拖动与 ↑/↓；按维度存 `localStorage`；GUI 实测拖 `完成` 到末位后顺序变 `运行中/中断/完成` 且写入成功，`恢复默认顺序` 复原 |
 | 33 | 要有一个标签管理界面 | ✅ | v0.3.2（§7.7）；工具栏「标签管理」→ `TagManagerDialog`（`GET/POST /tag-defs`）：列表带来源徽标与用量、新建（同名报错）、改名（撞名合并，同步会话 tags/suggestedTags 与规则）、删除（二次确认 + 清引用 + 空规则一并删除）、搜索；host 侧 `vocabulary/createDef/renameDef/removeDef`（tests/tags.test.js 6 例 + tests/client.test.js 1 例） |

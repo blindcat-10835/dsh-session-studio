@@ -71,10 +71,17 @@ export function normalizeTags(raw) {
 export function resolveDataDir(config) {
   const explicit = config?.dataDir
   if (typeof explicit === 'string' && explicit.trim()) return path.resolve(explicit)
-  const env = process.env.DSH_SESSION_MANAGER_DIR
+  const env = process.env.DSH_SESSION_STUDIO_DIR ?? process.env.DSH_SESSION_MANAGER_DIR
   if (typeof env === 'string' && env.trim()) return path.resolve(env)
   const home = process.env.DSH_HOME || path.join(os.homedir(), '.dsh')
-  return path.join(home, 'storages', 'session-manager')
+  const next = path.join(home, 'storages', 'session-studio')
+  const legacy = path.join(home, 'storages', 'session-manager')
+  try {
+    if (!fs.existsSync(next) && fs.existsSync(legacy)) fs.renameSync(legacy, next)
+  } catch {
+    /* keep writing to the new directory; the old one stays untouched */
+  }
+  return next
 }
 
 function emptyState() {
@@ -145,7 +152,7 @@ export class StateStore {
       this.state = state
       this.version += 1
     } catch (error) {
-      this.logger.warn?.('session-manager: state.json is unreadable, starting empty: ' + String(error?.message ?? error))
+      this.logger.warn?.('session-studio: state.json is unreadable, starting empty: ' + String(error?.message ?? error))
       this.quarantine('state.json')
     }
     return this
@@ -157,7 +164,7 @@ export class StateStore {
       if (!fs.existsSync(from)) return
       const to = from + '.corrupt-' + Date.now()
       fs.renameSync(from, to)
-      this.logger.warn?.('session-manager: moved unreadable ' + name + ' to ' + to)
+      this.logger.warn?.('session-studio: moved unreadable ' + name + ' to ' + to)
     } catch {
       /* best effort */
     }
@@ -171,7 +178,7 @@ export class StateStore {
       const parsed = JSON.parse(fs.readFileSync(file, 'utf8'))
       return parsed ?? fallback
     } catch (error) {
-      this.logger.warn?.('session-manager: ' + name + ' is unreadable, using defaults: ' + String(error?.message ?? error))
+      this.logger.warn?.('session-studio: ' + name + ' is unreadable, using defaults: ' + String(error?.message ?? error))
       this.quarantine(name)
       return fallback
     }
@@ -190,7 +197,7 @@ export class StateStore {
       this.writeDocSync(name, value)
       return true
     } catch (error) {
-      this.logger.error?.('session-manager: failed to write ' + name + ': ' + String(error?.message ?? error))
+      this.logger.error?.('session-studio: failed to write ' + name + ': ' + String(error?.message ?? error))
       return false
     }
   }
@@ -222,7 +229,7 @@ export class StateStore {
       this.writeDocSync('state.json', this.state)
     } catch (error) {
       this.dirty = true
-      this.logger.error?.('session-manager: failed to persist state: ' + String(error?.message ?? error))
+      this.logger.error?.('session-studio: failed to persist state: ' + String(error?.message ?? error))
     }
   }
 

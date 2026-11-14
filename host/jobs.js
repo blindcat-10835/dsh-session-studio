@@ -243,7 +243,7 @@ export function createJobRunner({
       return true
     } catch (error) {
       dirty = true
-      log.error?.('session-manager: failed to persist jobs.json: ' + String(error?.message ?? error))
+      log.error?.('session-studio: failed to persist jobs.json: ' + String(error?.message ?? error))
       return false
     }
   }
@@ -393,7 +393,7 @@ export function createJobRunner({
   try {
     persisted = typeof store?.readDoc === 'function' ? store.readDoc(DOC_NAME, null) : null
   } catch (error) {
-    log.warn?.('session-manager: could not read jobs.json: ' + String(error?.message ?? error))
+    log.warn?.('session-studio: could not read jobs.json: ' + String(error?.message ?? error))
     persisted = null
   }
   if (persisted && Array.isArray(persisted.jobs)) {

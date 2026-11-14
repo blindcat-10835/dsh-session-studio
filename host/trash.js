@@ -114,7 +114,7 @@ export function createTrashService({ store, sessions, logger, dataDir, fs: fsOpt
     try {
       parsed = store?.readDoc?.(TRASH_INDEX_FILE, fallback)
     } catch (error) {
-      log.warn?.('session-manager: could not read ' + TRASH_INDEX_FILE + ': ' + messageOf(error))
+      log.warn?.('session-studio: could not read ' + TRASH_INDEX_FILE + ': ' + messageOf(error))
     }
     doc = normalizeDoc(parsed)
     return doc
@@ -126,7 +126,7 @@ export function createTrashService({ store, sessions, logger, dataDir, fs: fsOpt
     try {
       return store.writeDoc(TRASH_INDEX_FILE, index()) !== false
     } catch (error) {
-      log.error?.('session-manager: could not write ' + TRASH_INDEX_FILE + ': ' + messageOf(error))
+      log.error?.('session-studio: could not write ' + TRASH_INDEX_FILE + ': ' + messageOf(error))
       return false
     }
   }
@@ -156,7 +156,7 @@ export function createTrashService({ store, sessions, logger, dataDir, fs: fsOpt
     try {
       return (await sessions.list()) ?? []
     } catch (error) {
-      log.warn?.('session-manager: could not list sessions: ' + messageOf(error))
+      log.warn?.('session-studio: could not list sessions: ' + messageOf(error))
       return []
     }
   }
@@ -167,7 +167,7 @@ export function createTrashService({ store, sessions, logger, dataDir, fs: fsOpt
       const facts = await sessions.factsOf(id)
       return typeof facts?.title === 'string' ? facts.title : ''
     } catch (error) {
-      log.warn?.('session-manager: could not read the title of ' + id + ': ' + messageOf(error))
+      log.warn?.('session-studio: could not read the title of ' + id + ': ' + messageOf(error))
       return ''
     }
   }
@@ -304,7 +304,7 @@ export function createTrashService({ store, sessions, logger, dataDir, fs: fsOpt
       if (rollbackError) {
         // The directory did move. Keep the record so this process can still list
         // and restore it, and say exactly where the data is.
-        log.error?.('session-manager: could not roll back ' + target + ' to ' + source + ': ' + messageOf(rollbackError))
+        log.error?.('session-studio: could not roll back ' + target + ' to ' + source + ': ' + messageOf(rollbackError))
         throw new StateError(
           'index_write_failed',
           'the session directory is in the trash at ' + target + ' but ' + TRASH_INDEX_FILE + ' could not be written and the move could not be rolled back: ' + describe(rollbackError),

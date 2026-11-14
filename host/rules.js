@@ -196,7 +196,7 @@ export function createRuleService({ store, sessions, tags, statusIndex, logger }
   if (!store) throw new Error('createRuleService needs a store')
   if (!sessions) throw new Error('createRuleService needs a session source')
 
-  const warn = (message) => logger?.warn?.('session-manager: ' + message)
+  const warn = (message) => logger?.warn?.('session-studio: ' + message)
 
   const concurrency = () => clampInt(store.settings?.status?.concurrency, 1, RULE_LIMITS.previewMaxConcurrency, RULE_LIMITS.previewConcurrency)
 

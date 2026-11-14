@@ -1,5 +1,5 @@
 /**
- * Host half of dsh-session-manager.
+ * Host half of dsh-session-studio.
  *
  * Wires six pieces and nothing else:
  *   store        — plugin-owned JSON document (tags, suggested tags, notes, title locks, rules)
@@ -19,12 +19,12 @@ import { createSessionSource } from './host/sessions.js'
 import { createApi, createJobHandlers, API_PREFIX } from './host/api.js'
 
 /** Cordis function-plugin name. */
-export const name = 'session-manager'
+export const name = 'session-studio'
 
 /** Route carrier, trust fence, and tool registry. */
 export const inject = ['webServer', 'connection', 'tools']
 
-export const VERSION = '1.0.0'
+export const VERSION = '1.1.0'
 
 function asRecord(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value) ? value : {}
@@ -53,7 +53,7 @@ async function optional(modulePath, exportName, args, logger, label) {
     const value = factory(args)
     return value && typeof value.then === 'function' ? await value : value
   } catch (error) {
-    logger.warn?.('session-manager: ' + label + ' unavailable: ' + String(error?.message ?? error))
+    logger.warn?.('session-studio: ' + label + ' unavailable: ' + String(error?.message ?? error))
     return null
   }
 }
@@ -99,7 +99,7 @@ export async function apply(ctx, config = {}) {
   try {
     jobs?.recover?.()
   } catch (error) {
-    logger.warn?.('session-manager: job recovery failed: ' + String(error?.message ?? error))
+    logger.warn?.('session-studio: job recovery failed: ' + String(error?.message ?? error))
   }
 
   // Workspace display labels: longest canonical-path prefix wins. Read lazily;
@@ -154,7 +154,7 @@ export async function apply(ctx, config = {}) {
           await api.handle(req, res)
         },
       }),
-    'session-manager: ' + API_PREFIX,
+    'session-studio: ' + API_PREFIX,
   )
 
   // Agent tools: listing rows and batch tagging. Small, typed, no writes beyond
@@ -163,7 +163,7 @@ export async function apply(ctx, config = {}) {
   if (toolService && typeof toolService.register === 'function') {
     const definitions = [
       {
-        name: 'session_manager_list',
+        name: 'session_studio_list',
         description: 'List DSH sessions with derived status, tags, notes and title locks. Reads the plugin status index; does not modify anything.',
         parameters: {
           type: 'object',
@@ -188,7 +188,7 @@ export async function apply(ctx, config = {}) {
         },
       },
       {
-        name: 'session_manager_tags',
+        name: 'session_studio_tags',
         description: 'Append, replace or clear tags on one or more DSH sessions. Writes the plugin tag store only; never touches the session log.',
         parameters: {
           type: 'object',
@@ -215,9 +215,9 @@ export async function apply(ctx, config = {}) {
     ]
     for (const definition of definitions) {
       try {
-        ctx.effect(() => toolService.register(definition), 'session-manager: tool ' + definition.name)
+        ctx.effect(() => toolService.register(definition), 'session-studio: tool ' + definition.name)
       } catch (error) {
-        logger.error?.('session-manager: tool ' + definition.name + ' failed to register: ' + String(error?.message ?? error))
+        logger.error?.('session-studio: tool ' + definition.name + ' failed to register: ' + String(error?.message ?? error))
       }
     }
   }
@@ -234,18 +234,18 @@ export async function apply(ctx, config = {}) {
     } catch {
       /* shutdown is best effort */
     }
-  }, 'session-manager: stop background work')
+  }, 'session-studio: stop background work')
 
   // Kick the incremental index once at load: newest Sessions first so the panel
   // has titles almost immediately.
   try {
     statusIndex?.start?.({ force: false })
   } catch (error) {
-    logger.warn?.('session-manager: could not start status index: ' + String(error?.message ?? error))
+    logger.warn?.('session-studio: could not start status index: ' + String(error?.message ?? error))
   }
 
   logger.info?.(
-    'session-manager ' + VERSION + ': data in ' + store.dataDir + ', API at ' + API_PREFIX +
+    'session-studio ' + VERSION + ': data in ' + store.dataDir + ', API at ' + API_PREFIX +
       ', services ' + [statusIndex && 'status', tags && 'tags', rules && 'rules', ai && 'ai', trash && 'trash', jobs && 'jobs'].filter(Boolean).join('/'),
   )
 }

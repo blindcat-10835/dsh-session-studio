@@ -1,5 +1,5 @@
 /**
- * dsh-session-manager — client half.
+ * dsh-session-studio — client half.
  *
  * Hand-written browser bundle, no build step. The DSH Web app evaluates this
  * file and \`window.__ModuleLoader__.load\` collects the { inject, apply } plugin
@@ -7,12 +7,12 @@
  *
  * Contract (docs/CONTRACTS.md, docs/PRD.md §7):
  *   - only \`require('react')\`; no JSX, no imports, every element through h();
- *   - \`main\` (key 'session-manager') is the page, \`sidebar.panellist\`
- *     (id 'session-manager', order 40) is its sidebar icon; both registrations
- *     and the <style data-plugin="dsh-session-manager"> element are owned by
+ *   - \`main\` (key 'session-studio') is the page, \`sidebar.panellist\`
+ *     (id 'session-studio', order 40) is its sidebar icon; both registrations
+ *     and the <style data-plugin="dsh-session-studio"> element are owned by
  *     ctx.effect(...), so plugin unload removes them;
  *   - all data arrives over the same-origin JSON channel
- *     \`/api/dsh-session-manager/...\`;
+ *     \`/api/dsh-session-studio/...\`;
  *   - live status (running / pendingInteraction / completionUnread) comes from
  *     the slot props \`useSessionStatus\` / \`useSessions\` when the runtime
  *     provides them, and degrades to host rows (lastTurnEnd + running) when it
@@ -22,7 +22,7 @@
  * \`helpers\` so tests can exercise them without a browser.
  */
 window.__ModuleLoader__.load({
-  id: 'dsh-session-manager',
+  id: 'dsh-session-studio',
   factory: function (require) {
     'use strict';
 
@@ -37,9 +37,9 @@ window.__ModuleLoader__.load({
      * Constants — PRD §3 is the only source of these names.
      * ------------------------------------------------------------------ */
 
-    var NS = 'dsh-session-manager';
-    var PANEL_ID = 'session-manager';
-    var API_PREFIX = '/api/dsh-session-manager';
+    var NS = 'dsh-session-studio';
+    var PANEL_ID = 'session-studio';
+    var API_PREFIX = '/api/dsh-session-studio';
     /**
      * Every host route this panel calls (docs/PRD.md §8). One map keeps the
      * client side of the HTTP contract greppable and directly testable.
@@ -283,7 +283,7 @@ window.__ModuleLoader__.load({
     }
 
     /** v0.3.1: where the user's own group order is remembered (PRD §7.1 拖动排序). */
-    var GROUP_ORDER_STORAGE_KEY = 'dsh-session-manager.group-order';
+    var GROUP_ORDER_STORAGE_KEY = 'dsh-session-studio.group-order';
 
     /**
      * Sort groups by a remembered key order (v0.3.1 拖动排序). Keys that the
@@ -974,7 +974,7 @@ window.__ModuleLoader__.load({
 
     function tagMenuChild(sessionId, tag, has, menus) {
       return {
-        id: 'dsh-session-manager.tag.' + tag,
+        id: 'dsh-session-studio.tag.' + tag,
         label: (has ? '✓ ' : '') + tag,
         failureLabel: t('menu.tagFailed'),
         run: function () {
@@ -1030,14 +1030,14 @@ window.__ModuleLoader__.load({
       if (!id) return [];
       var servicesValue = services || {};
       var actions = [{
-        id: 'dsh-session-manager.detail',
+        id: 'dsh-session-studio.detail',
         label: t('menu.detail'),
         failureLabel: t('notice.failed'),
         run: function () { requestPanelDetail(id); }
       }];
       if (hasMethod(servicesValue.uiWorkspace, 'openSession')) {
         actions.push({
-          id: 'dsh-session-manager.open',
+          id: 'dsh-session-studio.open',
           label: t('menu.open'),
           failureLabel: t('notice.failed'),
           run: function () { servicesValue.uiWorkspace.openSession(id); }
@@ -1211,16 +1211,16 @@ window.__ModuleLoader__.load({
         var current = pair[1] || [];
         if (defs.length === 0) {
           return [{
-            id: 'dsh-session-manager.tags',
+            id: 'dsh-session-studio.tags',
             label: t('menu.tags'),
-            children: [{ id: 'dsh-session-manager.tags.empty', label: t('menu.tagsEmpty'), disabled: true }]
+            children: [{ id: 'dsh-session-studio.tags.empty', label: t('menu.tagsEmpty'), disabled: true }]
           }];
         }
         var children = [];
         for (var index = 0; index < defs.length; index += 1) {
           children.push(tagMenuChild(id, defs[index], current.indexOf(defs[index]) >= 0, menus));
         }
-        return [{ id: 'dsh-session-manager.tags', label: t('menu.tags'), children: children }];
+        return [{ id: 'dsh-session-studio.tags', label: t('menu.tags'), children: children }];
       }, function () {
         return [];
       });
@@ -5789,13 +5789,13 @@ window.__ModuleLoader__.load({
       ctx.effect(function () {
         if (typeof document === 'undefined') return null;
         var style = document.createElement('style');
-        style.setAttribute('data-plugin', 'dsh-session-manager');
+        style.setAttribute('data-plugin', 'dsh-session-studio');
         style.textContent = CSS;
         document.head.appendChild(style);
         return function () {
           if (style.parentNode) style.parentNode.removeChild(style);
         };
-      }, 'dsh-session-manager:style');
+      }, 'dsh-session-studio:style');
 
       /**
        * The main page registration. The detail split lives inside Page, so no
@@ -5820,7 +5820,7 @@ window.__ModuleLoader__.load({
           }
           owned = [];
         });
-      }, 'dsh-session-manager:main');
+      }, 'dsh-session-studio:main');
 
       /**
        * v0.3: contribute the tag submenu to every native Session context menu
@@ -5831,13 +5831,13 @@ window.__ModuleLoader__.load({
         if (!hasMethod(menus, 'register')) return null;
         var workspace = optionalService(ctx, 'uiWorkspace');
         var disposeTags = menus.register({
-          id: 'dsh-session-manager.tags',
+          id: 'dsh-session-studio.tags',
           target: 'session',
           order: 500,
           resolve: function (target) { return sessionTagMenuActions(target, menus); }
         });
         var disposePanel = menus.register({
-          id: 'dsh-session-manager.panel-actions',
+          id: 'dsh-session-studio.panel-actions',
           target: 'session',
           order: 550,
           resolve: function (target) { return panelSessionMenuActions(target, { uiWorkspace: workspace }); }
@@ -5846,7 +5846,7 @@ window.__ModuleLoader__.load({
           try { if (typeof disposeTags === 'function') disposeTags(); } catch (error) { /* keep unloading */ }
           try { if (typeof disposePanel === 'function') disposePanel(); } catch (error) { /* keep unloading */ }
         };
-      }, 'dsh-session-manager:session-tags-menu');
+      }, 'dsh-session-studio:session-tags-menu');
 
       /**
        * v0.3 P2: ambient decorations on the native Session rows. Both seats are
@@ -5859,7 +5859,7 @@ window.__ModuleLoader__.load({
         var trailing = ctx.slots.inject('sidebar.session.row.trailing', function () {
           return ctx.slots.register({
             name: 'sidebar.session.row.trailing',
-            id: 'dsh-session-manager.row-status',
+            id: 'dsh-session-studio.row-status',
             order: 20,
             locale: NS
           }, RowStatusBadge);
@@ -5868,7 +5868,7 @@ window.__ModuleLoader__.load({
         var hover = ctx.slots.inject('sidebar.session.row.hover', function () {
           return ctx.slots.register({
             name: 'sidebar.session.row.hover',
-            id: 'dsh-session-manager.row-hover',
+            id: 'dsh-session-studio.row-hover',
             order: 20,
             locale: NS
           }, RowHoverSection);
@@ -5880,7 +5880,7 @@ window.__ModuleLoader__.load({
           }
           owned = [];
         });
-      }, 'dsh-session-manager:sidebar-rows');
+      }, 'dsh-session-studio:sidebar-rows');
 
       ctx.effect(function () {
         if (!ctx.slots || typeof ctx.slots.inject !== 'function') return null;
@@ -5896,7 +5896,7 @@ window.__ModuleLoader__.load({
         return ownedCleanup(function () {
           if (registration && typeof registration.dispose === 'function') registration.dispose();
         });
-      }, 'dsh-session-manager:sidebar');
+      }, 'dsh-session-studio:sidebar');
 
       return undefined;
     }

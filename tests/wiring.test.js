@@ -172,13 +172,13 @@ test('wiring registers the two agent tools and exposes them over the tool servic
   const { ctx, tools } = createFakeCtx(logs)
   await apply(ctx, { dataDir })
   const names = tools.map((definition) => definition.name).sort()
-  assert.deepEqual(names, ['session_manager_list', 'session_manager_tags'])
+  assert.deepEqual(names, ['session_studio_list', 'session_studio_tags'])
 
-  const list = tools.find((definition) => definition.name === 'session_manager_list')
+  const list = tools.find((definition) => definition.name === 'session_studio_list')
   const value = await list.execute({ includeArchived: true, includeSubagents: true, limit: 10 })
   assert.ok(Array.isArray(value.rows))
 
-  const tagTool = tools.find((definition) => definition.name === 'session_manager_tags')
+  const tagTool = tools.find((definition) => definition.name === 'session_studio_tags')
   const tagged = await tagTool.execute({ sessionIds: ['sm-9'], op: 'append', tags: ['文档'] })
   assert.equal(tagged.updated, 1)
   const reread = await list.execute({ limit: 10 })

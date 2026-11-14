@@ -11,7 +11,7 @@ function fakeStore(initialDocs = {}) {
   for (const [name, value] of Object.entries(initialDocs)) docs.set(name, JSON.parse(JSON.stringify(value)))
   const writes = []
   const store = {
-    dataDir: '/nonexistent/session-manager-status-test',
+    dataDir: '/nonexistent/session-studio-status-test',
     docs,
     writes,
     failNextWrites: 0,

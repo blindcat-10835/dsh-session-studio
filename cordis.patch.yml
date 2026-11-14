@@ -1,11 +1,11 @@
-# dsh-session-manager bundle patch.
+# dsh-session-studio bundle patch.
 #
 # Installing the bundle appends this package to the profile bundle stack and the
 # profile boot merges THIS patch (one insert of the plugin row), so no manual
 # cordis.patch.yml edit is needed.
 - insert:
-    - id: session-manager
-      name: 'dsh-session-manager'
+    - id: session-studio
+      name: 'dsh-session-studio'
       config:
         status:
           enabled: true

@@ -1,10 +1,10 @@
-# dsh-session-manager
+# dsh-session-studio
 
 **中文** · [English](./README.md)
 
 DSH Web 的会话管理面板：把会话按**状态（7 档：待处理/运行中/阻塞/失败/已完成未读/中断/完成）/ 时间桶 / 标签**分组浏览，支持标签规则、AI 批量重命名、AI 自动打标签（一律先预览-应用，慢操作以后台任务运行）、归档与回收站；行级操作复用原生左栏自己的右键菜单与行座位，不另起一套交互。
 
-[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.0.0-blue)](./package.json)
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.1.0-blue)](./package.json)
 [![tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)](./tests)
 [![license](https://img.shields.io/badge/license-MIT-green)](./package.json)
 
@@ -43,19 +43,21 @@ DSH Web 的会话管理面板：把会话按**状态（7 档：待处理/运行�
 
 ```bash
 # 装进当前 profile（web）：
-dsh plugin --profile web add "https://github.com/blindcat-10835/dsh-session-manager"
+dsh plugin --profile web add "https://github.com/blindcat-10835/dsh-session-studio"
 ```
 
 或者从本地工作区安装（开发时用的就是这条）：
 
 ```bash
 cd /root/.dsh/profiles/web
-pnpm add link:/path/to/dsh-session-manager
+pnpm add link:/path/to/dsh-session-studio
 # 再把包名加到 package.json 的 dsh.profile.bundles 里：
-#   "dsh-session-manager"
+#   "dsh-session-studio"
 ```
 
 > 用 `link:`（而不是 `file:`）安装，profile 的 `node_modules` 是指向工作区的符号链接，改完 `client.js` / `host/*` 重启即生效；`file:` 会复制一份，改代码不生效。
+
+> 1.1.0 起由 `dsh-session-manager` 改名，避免与同名插件冲突。原 `$DSH_HOME/storages/session-manager` 数据会在首次加载时搬到 `storages/session-studio`；环境变量 `DSH_SESSION_MANAGER_DIR` 仍然兼容。
 
 安装会把本包加进当前 profile 的 bundle 栈，并合并 [cordis.patch.yml](./cordis.patch.yml) 里的 `insert` 行，不需要手工编辑 profile 的 cordis 配置。重启后（`dsh --profile web`，或仓库外的 `restart-web.sh`），侧栏出现「会话管理」入口。首次打开会在后台索引历史会话（本机 185 个约 30 秒），期间标题与失败/阻塞状态会逐步补齐。
 
@@ -102,10 +104,10 @@ pnpm add link:/path/to/dsh-session-manager
 
 ```yaml
 - insert:
-    - id: session-manager
-      name: 'dsh-session-manager'
+    - id: session-studio
+      name: 'dsh-session-studio'
       config:
-        dataDir: /custom/path             # 默认 $DSH_HOME/storages/session-manager
+        dataDir: /custom/path             # 默认 $DSH_HOME/storages/session-studio
         status:
           enabled: true
           tailEvents: 120                 # 每个会话读日志尾部多少事件来判定 阻塞/失败
@@ -134,25 +136,25 @@ pnpm add link:/path/to/dsh-session-manager
 
 ## HTTP 接口
 
-客户端与服务端只走同源 HTTP（浏览器半无法使用 typed RPC）。前缀 `/api/dsh-session-manager`，完整契约见 [docs/PRD.md](./docs/PRD.md) §8；常用几条：
+客户端与服务端只走同源 HTTP（浏览器半无法使用 typed RPC）。前缀 `/api/dsh-session-studio`，完整契约见 [docs/PRD.md](./docs/PRD.md) §8；常用几条：
 
 ```bash
-curl -s localhost:3081/api/dsh-session-manager/state | jq .
-curl -s 'localhost:3081/api/dsh-session-manager/sessions?includeArchived=1' | jq '.rows[0]'
-curl -s -X POST localhost:3081/api/dsh-session-manager/tags -H 'content-type: application/json' \
+curl -s localhost:3081/api/dsh-session-studio/state | jq .
+curl -s 'localhost:3081/api/dsh-session-studio/sessions?includeArchived=1' | jq '.rows[0]'
+curl -s -X POST localhost:3081/api/dsh-session-studio/tags -H 'content-type: application/json' \
   -d '{"sessionIds":["<id>"],"op":"append","tags":["bug"]}'
 
 # 标签词表
-curl -s localhost:3081/api/dsh-session-manager/tag-defs | jq '.tagDefs[] | {name,sessions}'
-curl -s -X POST localhost:3081/api/dsh-session-manager/tag-defs -H 'content-type: application/json' \
+curl -s localhost:3081/api/dsh-session-studio/tag-defs | jq '.tagDefs[] | {name,sessions}'
+curl -s -X POST localhost:3081/api/dsh-session-studio/tag-defs -H 'content-type: application/json' \
   -d '{"op":"rename","name":"bug","to":"defect"}'
 
 # 慢操作返回 202 + 任务对象，随后轮询
-curl -s -X POST localhost:3081/api/dsh-session-manager/tags/fill-missing \
+curl -s -X POST localhost:3081/api/dsh-session-studio/tags/fill-missing \
   -H 'content-type: application/json' -d '{"dryRun":true}' | jq '.job | {id,type,state}'
-curl -s 'localhost:3081/api/dsh-session-manager/jobs?active=1' | jq '.jobs[] | {id,type,state,percent}'
-curl -s localhost:3081/api/dsh-session-manager/jobs/<jobId> | jq '.job | {state,result,items:[.items[]|{key,state,message}]}'
-curl -s -X POST localhost:3081/api/dsh-session-manager/jobs/<jobId>/cancel | jq '.job.state'
+curl -s 'localhost:3081/api/dsh-session-studio/jobs?active=1' | jq '.jobs[] | {id,type,state,percent}'
+curl -s localhost:3081/api/dsh-session-studio/jobs/<jobId> | jq '.job | {state,result,items:[.items[]|{key,state,message}]}'
+curl -s -X POST localhost:3081/api/dsh-session-studio/jobs/<jobId>/cancel | jq '.job.state'
 ```
 
 ## 已知偏离与限制
