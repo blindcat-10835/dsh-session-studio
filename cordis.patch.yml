@@ -1,0 +1,13 @@
+# dsh-session-manager bundle patch.
+#
+# Installing the bundle appends this package to the profile bundle stack and the
+# profile boot merges THIS patch (one insert of the plugin row), so no manual
+# cordis.patch.yml edit is needed.
+- insert:
+    - id: session-manager
+      name: 'dsh-session-manager'
+      config:
+        status:
+          enabled: true
+          tailEvents: 120
+          concurrency: 2

@@ -1,0 +1,50 @@
+{
+  "name": "dsh-session-manager",
+  "version": "1.0.0",
+  "description": "DSH Web 会话管理：按状态/时间/标签分组浏览会话，标签规则、AI 批量重命名与自动打标签（预览-应用、后台任务），复用原生右键菜单（含标签子菜单）、面板内详情分栏、跳转会话，原生左栏状态/标签装饰，归档与回收站。",
+  "type": "module",
+  "license": "MIT",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-context-menu",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-api-remotes"
+      ]
+    }
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "host/**/*.js",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "docs/**/*.md",
+    "tests/**/*.js"
+  ],
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\""
+  }
+}

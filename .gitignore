@@ -1,0 +1,11 @@
+# Plugin runtime data (never committed: it is per-machine user state)
+storages/
+*.log
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
+
+# Node
+node_modules/
