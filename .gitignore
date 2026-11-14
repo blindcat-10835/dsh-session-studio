@@ -9,3 +9,6 @@ Thumbs.db
 
 # Node
 node_modules/
+
+# Python bytecode from the screenshot masking scripts
+__pycache__/
