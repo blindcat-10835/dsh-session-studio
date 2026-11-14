@@ -4,7 +4,7 @@
 
 DSH Web 的会话管理面板：把会话按**状态（7 档：待处理/运行中/阻塞/失败/已完成未读/中断/完成）/ 时间桶 / 标签**分组浏览，支持标签规则、AI 批量重命名、AI 自动打标签（一律先预览-应用，慢操作以后台任务运行）、归档与回收站；行级操作复用原生左栏自己的右键菜单与行座位，不另起一套交互。
 
-[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.1.0-blue)](./package.json)
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.2.0-blue)](./package.json)
 [![tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)](./tests)
 [![license](https://img.shields.io/badge/license-MIT-green)](./package.json)
 
@@ -18,6 +18,7 @@ DSH Web 的会话管理面板：把会话按**状态（7 档：待处理/运行�
 
 ## 功能
 
+- **一套图标词表**：状态 7 档、时间 4 桶、分组 4 维、标签、标签来源、规则模式、任务状态、空态，全部挂在同一张映射表上；组头、行、筛选、概览、详情、chip、规则、原生左栏徽标与悬停卡里同一个分类必然同图标。
 - **分组**：状态 / 时间桶 / 标签 / 不分组。组头始终显示该组总数与全部 7 档状态计数，折叠也在。
 - **分组顺序自己定**：拖组头的 ⠿ 柄，或用组头的 ↑/↓ 一格一格移；顺序按维度记在浏览器本地，工具栏「恢复默认顺序」一键还原。
 - **概览条**：待处理 / 阻塞 / 失败 / 已完成未读 四个可点计数，点一下就是一个筛选。
@@ -25,7 +26,7 @@ DSH Web 的会话管理面板：把会话按**状态（7 档：待处理/运行�
 - **打标签**：批量追加 / 替换 / 清空，规则命中建议，AI 建议与意图，一键补齐缺失标签（绝不覆盖已有）。
 - **标签管理**：真正的词表 CRUD——新建、改名（撞名即合并）、删除（连带清掉会话与规则上的该词）、搜索、用量统计。
 - **AI 批量重命名**：先出预览（旧→新、依据、跳过原因、逐条取消），确认后作为后台任务应用。
-- **原生集成**：行上右键弹出**原生共享菜单**，插件追加「标签」子菜单与「查看详情」「打开会话」；原生左栏行尾显示状态点与标签数，悬停卡显示状态与标签。
+- **原生集成**：行上右键弹出**原生共享菜单**，插件追加「标签」子菜单与「查看详情」「打开会话」；原生左栏行尾显示状态图标与标签数，悬停卡显示状态与标签图标。
 - **会话操作**：跳转、分叉、置顶、复制 ID、在文件夹显示、归档/恢复、回收站。
 - **后台任务**：有进度、可取消、有逐条明细；宿主重启后未完成任务标记为「已中断」，不静默重跑。
 
@@ -176,7 +177,7 @@ node --check index.js client.js host/*.js
 node --test 'tests/*.test.js'   # 纯 node:test，无构建步骤
 ```
 
-目录：`index.js` 宿主装配、`host/` 服务端模块、`client.js` 浏览器单文件面板、`locale/` 文案、`docs/` 产品与决策记录、`tests/`。内部模块契约见 [docs/CONTRACTS.md](./docs/CONTRACTS.md)。
+目录：`index.js` 宿主装配、`host/` 服务端模块、`client.js` 浏览器单文件面板、`locale/` 文案、`icons/` 分类图标唯一映射表、`tools/` 生成器、`docs/` 产品与决策记录、`tests/`。内部模块契约见 [docs/CONTRACTS.md](./docs/CONTRACTS.md)。
 
 ## 文档
 
@@ -185,6 +186,8 @@ node --test 'tests/*.test.js'   # 纯 node:test，无构建步骤
 - [docs/CONTRACTS.md](./docs/CONTRACTS.md) —— 内部模块接口
 - [docs/US.md](./docs/US.md) —— 用户故事原文
 - [docs/adr/](./docs/adr/) —— 架构决策记录
+- [SPEC.md](./SPEC.md) —— 视觉与图标契约（冻结）
+- [docs/feature/visual/icon-contract.md](./docs/feature/visual/icon-contract.md) —— 实现落点
 
 ## 决策记录
 

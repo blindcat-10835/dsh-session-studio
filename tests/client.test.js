@@ -160,6 +160,8 @@ function textOf(node) {
   if (typeof node === 'string') return node;
   if (typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(textOf).join(' ');
+  /* Icons are decoration: their SVG attribute strings are not UI text. */
+  if (node.type === 'svg') return '';
   let text = '';
   if (node.props) {
     for (const value of Object.values(node.props)) {
@@ -529,7 +531,8 @@ test('TagManagerDialog lists the vocabulary and drives create, rename and delete
   const remaining = findNodes(tree, (node) => node.type === 'li' && String(node.props.className || '').includes('sm-tagmanage-item'));
   const names = remaining.map((node) => {
     const label = findNode(node, (child) => String(child.props.className || '') === 'sm-tagmanage-name');
-    return Array.isArray(label.children) ? label.children.join('') : String(label.children);
+    const text = findNode(label, (child) => child.type === 'span' && child.props && !child.props.className);
+    return String(text.children);
   });
   assert.deepEqual(names, ['bug', '紫霄V3.5'], 'only the deleted word is gone');
   assert.ok(textOf(tree).includes('已删除标签「华为项目」'), 'the status line reports what was removed');

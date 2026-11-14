@@ -4,7 +4,7 @@
 
 A session manager panel for the DSH Web GUI: browse your sessions grouped by **status (7 states) / time bucket / tag**, with tag rules, AI batch rename and AI auto-tagging (always preview-then-apply, slow work runs as background jobs), archive and trash. Row-level actions reuse the native sidebar's own context menu and row seats instead of inventing a parallel UI.
 
-[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.1.0-blue)](./package.json)
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.2.0-blue)](./package.json)
 [![tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)](./tests)
 [![license](https://img.shields.io/badge/license-MIT-green)](./package.json)
 
@@ -18,6 +18,7 @@ And when a batch of sessions needs renaming or tagging, clicking through them on
 
 ## Features
 
+- **One icon vocabulary** — every category (7 session statuses, 4 time buckets, 4 grouping dimensions, tags, tag sources, rule modes, job states, empty states) has one glyph in one map, rendered identically in the header, rows, group heads, filters, overview, detail, chips, rules, the native sidebar badge and the hover card.
 - **Grouping** — by status / time bucket / tag / none. Group headers always show the total and all seven status counts, collapsed or not.
 - **Your own group order** — drag the ⠿ handle, or nudge with ↑/↓. The order is remembered per dimension in the browser, with a "reset order" button.
 - **Overview strip** — four clickable counters (pending / blocked / failed / completed-unread); one click is one filter.
@@ -25,7 +26,7 @@ And when a batch of sessions needs renaming or tagging, clicking through them on
 - **Tagging** — batch append / replace / clear, rule-driven suggestions, AI suggestions with intent, and one-click "fill missing tags" that never overwrites.
 - **Tag manager** — a real CRUD surface for the vocabulary: create, rename (renaming onto an existing word merges them), delete (clears the word from every session and rule), search, and usage counts.
 - **AI batch rename** — preview first (old → new, the evidence, skip reasons, per-item cancel), then apply as a background job.
-- **Native integration** — right-click a row and you get the *native* shared menu, with a 「标签」 submenu and 「查看详情」/「打开会话」 appended. The native sidebar rows also show a status dot and tag count, plus status and tags in the hover card.
+- **Native integration** — right-click a row and you get the *native* shared menu, with a 「标签」 submenu and 「查看详情」/「打开会话」 appended. The native sidebar rows also show a status icon and tag count, plus status and tag icons in the hover card.
 - **Session actions** — jump to session, fork, pin, copy ID, reveal in folder, archive/restore, trash.
 - **Background jobs** — progress, cancel, per-item detail; a host restart marks unfinished jobs as interrupted instead of silently rerunning them.
 
@@ -176,7 +177,7 @@ node --check index.js client.js host/*.js
 node --test 'tests/*.test.js'   # plain node:test, no build step
 ```
 
-Layout: `index.js` host assembly, `host/` server-side modules, `client.js` the single-file browser panel, `locale/` copy, `docs/` product and decision records, `tests/`. The internal module contract is in [docs/CONTRACTS.md](./docs/CONTRACTS.md).
+Layout: `index.js` host assembly, `host/` server-side modules, `client.js` the single-file browser panel, `locale/` copy, `icons/` the canonical category → icon map, `tools/` its generator, `docs/` product and decision records, `tests/`. The internal module contract is in [docs/CONTRACTS.md](./docs/CONTRACTS.md).
 
 ## Documentation
 
@@ -185,6 +186,8 @@ Layout: `index.js` host assembly, `host/` server-side modules, `client.js` the s
 - [docs/CONTRACTS.md](./docs/CONTRACTS.md) — internal module interfaces
 - [docs/US.md](./docs/US.md) — the user stories as originally written
 - [docs/adr/](./docs/adr/) — architecture decision records
+- [SPEC.md](./SPEC.md) — frozen visual and icon contract
+- [docs/feature/visual/icon-contract.md](./docs/feature/visual/icon-contract.md) — implementation notes
 
 ## Decision records
 

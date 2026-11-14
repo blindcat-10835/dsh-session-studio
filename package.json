@@ -1,6 +1,6 @@
 {
   "name": "dsh-session-studio",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "DSH Web 会话管理：按状态/时间/标签分组浏览会话，标签规则、AI 批量重命名与自动打标签（预览-应用、后台任务），复用原生右键菜单（含标签子菜单）、面板内详情分栏、跳转会话，原生左栏状态/标签装饰，归档与回收站。",
   "type": "module",
   "license": "MIT",
@@ -11,7 +11,8 @@
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./icons/classification-icons.mjs": "./icons/classification-icons.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -43,11 +44,15 @@
     "screenshots.json",
     "README.md",
     "README.zh.md",
+    "SPEC.md",
+    "icons/**/*.mjs",
     "docs/**/*.md",
     "docs/images/*.png",
+    "tools/sync-icon-map.mjs",
     "tests/**/*.js"
   ],
   "scripts": {
-    "test": "node --test \"tests/*.test.js\""
+    "test": "node --test \"tests/*.test.js\"",
+    "icons:sync": "node tools/sync-icon-map.mjs"
   }
 }

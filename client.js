@@ -76,6 +76,177 @@ window.__ModuleLoader__.load({
     /** CONTEXT "时间桶": local calendar days. */
     var BUCKET_IDS = ['today', 'week', 'month', 'earlier'];
     var GROUP_IDS = ['status', 'time', 'tag', 'none'];
+
+    /* @icon-map:begin — generated, do not edit. Source: icons/classification-icons.mjs */
+    var ICON_LIB = {
+      "ICON_PATHS": {
+        "tree": [["path",{"d":"M8 6h13M8 12h13M8 18h13"}],["path",{"d":"M3.5 6h.01M3.5 12h.01M3.5 18h.01"}]],
+        "tag": [["path",{"d":"M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9z"}],["circle",{"cx":7.5,"cy":7.5,"r":1.2}]],
+        "play": [["path",{"d":"M7 4.5v15l12-7.5z"}]],
+        "pause": [["path",{"d":"M8 5v14M16 5v14"}]],
+        "stop": [["rect",{"x":6,"y":6,"width":12,"height":12,"rx":2}]],
+        "clock": [["circle",{"cx":12,"cy":12,"r":8}],["path",{"d":"M12 8v4l3 2"}]],
+        "calendar": [["rect",{"x":3,"y":5,"width":18,"height":16,"rx":2}],["path",{"d":"M3 10h18M8 3v4M16 3v4"}]],
+        "alert": [["path",{"d":"M12 4l8 14H4zM12 10v4M12 16.5h.01"}]],
+        "check": [["path",{"d":"M5 13l4 4L19 7"}]],
+        "circle": [["circle",{"cx":12,"cy":12,"r":9}]],
+        "circleDot": [["circle",{"cx":12,"cy":12,"r":9}],["circle",{"cx":12,"cy":12,"r":3.5,"fill":"currentColor","stroke":"none"}]],
+        "circleCheck": [["circle",{"cx":12,"cy":12,"r":9}],["path",{"d":"M8.2 12.4 11 15.2 15.8 9"}]],
+        "circleX": [["circle",{"cx":12,"cy":12,"r":9}],["path",{"d":"M9.2 9.2 14.8 14.8M14.8 9.2 9.2 14.8"}]],
+        "lock": [["rect",{"x":5,"y":11,"width":14,"height":9,"rx":2}],["path",{"d":"M8 11V8a4 4 0 0 1 8 0v3"}]],
+        "manual": [["path",{"d":"M5 4h9l5 5v11H5z"}],["path",{"d":"M14 4v5h5"}],["path",{"d":"M8 13h8M8 16h5"}]],
+        "spark": [["path",{"d":"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"}]],
+        "filter": [["path",{"d":"M4 6h16M7 12h10M10 18h4"}]],
+        "chevronRight": [["path",{"d":"M9 6l6 6-6 6"}]],
+        "chevronDown": [["path",{"d":"M6 9l6 6 6-6"}]],
+        "close": [["path",{"d":"M6 6l12 12M18 6L6 18"}]],
+        "refresh": [["path",{"d":"M20 11a8 8 0 1 0-2.3 6.4"}],["path",{"d":"M20 5v6h-6"}]],
+        "external": [["path",{"d":"M14 4h6v6M20 4l-8 8"}],["path",{"d":"M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"}]],
+        "link": [["path",{"d":"M10.5 13.5a4 4 0 0 0 5.7 0l3-3A4 4 0 0 0 13.5 4.8l-1.4 1.4"}],["path",{"d":"M13.5 10.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.4-1.4"}]],
+        "rewind": [["path",{"d":"M4 11a8 8 0 1 0 2.6-5.9"}],["path",{"d":"M4 4v6h6"}]],
+        "sliders": [["path",{"d":"M4 7h9M17 7h3M4 17h5M13 17h7"}],["circle",{"cx":15,"cy":7,"r":2}],["circle",{"cx":11,"cy":17,"r":2}]],
+        "folder": [["path",{"d":"M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"}]],
+        "flag": [["path",{"d":"M6 21V4M6 5h11l-2 3 2 3H6"}]],
+        "info": [["circle",{"cx":12,"cy":12,"r":8}],["path",{"d":"M12 11v5M12 8h.01"}]],
+        "copy": [["rect",{"x":9,"y":9,"width":11,"height":11,"rx":2}],["path",{"d":"M5 15V5a1 1 0 0 1 1-1h9"}]],
+        "branch": [["circle",{"cx":6,"cy":6,"r":2.5}],["circle",{"cx":6,"cy":18,"r":2.5}],["circle",{"cx":18,"cy":9,"r":2.5}],["path",{"d":"M6 8.5v7M18 11.5c0 3-3 3.5-6 4.5"}]],
+        "shield": [["path",{"d":"M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z"}]],
+        "bell": [["path",{"d":"M6 9a6 6 0 0 1 12 0c0 4 1 5 1 5H5s1-1 1-5zM10 19a2 2 0 0 0 4 0"}]],
+        "layers": [["path",{"d":"M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5"}]],
+        "inbox": [["path",{"d":"M4 6h16v12H4zM4 13h5l1 2h4l1-2h5"}]],
+        "hash": [["path",{"d":"M5 9h14M5 15h14M10 4 8 20M16 4l-2 16"}]],
+        "dot": [["circle",{"cx":12,"cy":12,"r":8}],["circle",{"cx":12,"cy":12,"r":3}]],
+        "search": [["circle",{"cx":11,"cy":11,"r":7}],["path",{"d":"M20 20l-3.7-3.7"}]],
+        "plus": [["path",{"d":"M12 5v14M5 12h14"}]],
+        "minus": [["path",{"d":"M5 12h14"}]],
+        "sun": [["circle",{"cx":12,"cy":12,"r":4}],["path",{"d":"M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"}]],
+        "calendarWeek": [["rect",{"x":3,"y":5,"width":18,"height":16,"rx":2}],["path",{"d":"M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2"}]],
+        "calendarMonth": [["rect",{"x":3,"y":5,"width":18,"height":16,"rx":2}],["path",{"d":"M3 10h18M8 3v4M16 3v4M7 13h2M11 13h2M15 13h2M7 17h2M11 17h2M15 17h2"}]],
+        "tagOff": [["path",{"d":"M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9z"}],["circle",{"cx":7.5,"cy":7.5,"r":1.2}],["path",{"d":"M4 20 20 4"}]],
+        "archive": [["rect",{"x":3,"y":4,"width":18,"height":5,"rx":1.5}],["path",{"d":"M5 9v10h14V9M10 13h4"}]],
+        "pin": [["path",{"d":"M9 3h6l-1 6 4 4H6l4-4-1-6z"}],["path",{"d":"M12 13v8"}]],
+        "funnel": [["path",{"d":"M4 5h16l-6 7v6l-4 2v-8L4 5z"}]],
+        "list": [["path",{"d":"M4 6h16M4 12h16M4 18h16"}]]
+      },
+      "ICON_TONES": ["neutral","muted","brand","warn","error","success"],
+      "STATUS_ICONS": {"pending":{"icon":"clock","tone":"warn"},"running":{"icon":"play","tone":"brand"},"blocked":{"icon":"shield","tone":"warn"},"failed":{"icon":"circleX","tone":"error"},"unread":{"icon":"circleDot","tone":"success"},"completed":{"icon":"circleCheck","tone":"success"},"interrupted":{"icon":"stop","tone":"muted"}},
+      "BUCKET_ICONS": {"today":{"icon":"sun","tone":"neutral"},"week":{"icon":"calendarWeek","tone":"neutral"},"month":{"icon":"calendarMonth","tone":"neutral"},"earlier":{"icon":"rewind","tone":"muted"}},
+      "GROUP_ICONS": {"status":{"icon":"layers","tone":"neutral"},"time":{"icon":"clock","tone":"neutral"},"tag":{"icon":"tag","tone":"brand"},"none":{"icon":"tree","tone":"neutral"}},
+      "MARK_ICONS": {"locked":{"icon":"lock","tone":"muted"},"archived":{"icon":"archive","tone":"muted"},"pinned":{"icon":"pin","tone":"brand"},"subagent":{"icon":"branch","tone":"muted"}},
+      "TAG_SOURCE_ICONS": {"manual":{"icon":"manual","tone":"muted"},"rule":{"icon":"funnel","tone":"brand"},"ai":{"icon":"spark","tone":"brand"}},
+      "RULE_MODE_ICONS": {"suggest":{"icon":"spark","tone":"brand"},"apply":{"icon":"check","tone":"success"}},
+      "EMPTY_ICONS": {"empty":{"icon":"inbox","tone":"muted"},"filtered":{"icon":"filter","tone":"muted"},"error":{"icon":"alert","tone":"error"},"search":{"icon":"search","tone":"muted"},"tag":{"icon":"tag","tone":"muted"},"rule":{"icon":"funnel","tone":"muted"},"trash":{"icon":"archive","tone":"muted"}},
+      "JOB_ICONS": {"queued":{"icon":"clock","tone":"muted"},"running":{"icon":"play","tone":"brand"},"succeeded":{"icon":"check","tone":"success"},"failed":{"icon":"circleX","tone":"error"},"cancelled":{"icon":"stop","tone":"muted"},"interrupted":{"icon":"pause","tone":"warn"},"idle":{"icon":"clock","tone":"muted"}},
+      "CATEGORY_ICONS": {
+        "status": {"pending":{"icon":"clock","tone":"warn"},"running":{"icon":"play","tone":"brand"},"blocked":{"icon":"shield","tone":"warn"},"failed":{"icon":"circleX","tone":"error"},"unread":{"icon":"circleDot","tone":"success"},"completed":{"icon":"circleCheck","tone":"success"},"interrupted":{"icon":"stop","tone":"muted"}},
+        "bucket": {"today":{"icon":"sun","tone":"neutral"},"week":{"icon":"calendarWeek","tone":"neutral"},"month":{"icon":"calendarMonth","tone":"neutral"},"earlier":{"icon":"rewind","tone":"muted"}},
+        "group": {"status":{"icon":"layers","tone":"neutral"},"time":{"icon":"clock","tone":"neutral"},"tag":{"icon":"tag","tone":"brand"},"none":{"icon":"tree","tone":"neutral"}},
+        "mark": {"locked":{"icon":"lock","tone":"muted"},"archived":{"icon":"archive","tone":"muted"},"pinned":{"icon":"pin","tone":"brand"},"subagent":{"icon":"branch","tone":"muted"}},
+        "tagSource": {"manual":{"icon":"manual","tone":"muted"},"rule":{"icon":"funnel","tone":"brand"},"ai":{"icon":"spark","tone":"brand"}},
+        "ruleMode": {"suggest":{"icon":"spark","tone":"brand"},"apply":{"icon":"check","tone":"success"}},
+        "empty": {"empty":{"icon":"inbox","tone":"muted"},"filtered":{"icon":"filter","tone":"muted"},"error":{"icon":"alert","tone":"error"},"search":{"icon":"search","tone":"muted"},"tag":{"icon":"tag","tone":"muted"},"rule":{"icon":"funnel","tone":"muted"},"trash":{"icon":"archive","tone":"muted"}},
+        "job": {"queued":{"icon":"clock","tone":"muted"},"running":{"icon":"play","tone":"brand"},"succeeded":{"icon":"check","tone":"success"},"failed":{"icon":"circleX","tone":"error"},"cancelled":{"icon":"stop","tone":"muted"},"interrupted":{"icon":"pause","tone":"warn"},"idle":{"icon":"clock","tone":"muted"}}
+      }
+    };
+    /* @icon-map:end */
+
+    /* ------------------------------------------------------------------ *
+     * Icons — one lookup for every category (see `@icon-map` above).
+     * ------------------------------------------------------------------ */
+
+    /** Category → { icon, tone }. Unknown keys fall back to `dot`, never a guess. */
+    function iconMetaOf(kind, key) {
+      var table = ICON_LIB.CATEGORY_ICONS[kind];
+      var meta = table && table[key];
+      return meta || { icon: 'dot', tone: 'muted' };
+    }
+
+    /** Group key (`status:x` / `time:x` / `tag:name` / `untagged` / `all`) → icon. */
+    function groupIconMeta(groupKey) {
+      var key = String(groupKey || '');
+      if (key.indexOf('status:') === 0) return iconMetaOf('status', key.slice(7));
+      if (key.indexOf('time:') === 0) return iconMetaOf('bucket', key.slice(5));
+      if (key.indexOf('tag:') === 0) return { icon: 'tag', tone: 'brand' };
+      if (key === 'untagged') return { icon: 'tagOff', tone: 'muted' };
+      if (key === 'all') return iconMetaOf('group', 'none');
+      return { icon: 'dot', tone: 'muted' };
+    }
+
+    /**
+     * One inline SVG. Colour is always `currentColor`; the only colour input is
+     * the semantic tone class. Icon-only call sites pass `label`, which becomes
+     * role=img + aria-label + title; everywhere else the glyph is decorative.
+     */
+    function Icon(props) {
+      var name = props && props.name;
+      var spec = ICON_LIB.ICON_PATHS[name] || ICON_LIB.ICON_PATHS.dot;
+      var size = props && typeof props.size === 'number' ? props.size : 16;
+      var tone = props && props.tone ? props.tone : 'neutral';
+      var children = [];
+      for (var index = 0; index < spec.length; index += 1) {
+        var entry = spec[index];
+        var attrs = {};
+        var source = entry[1] || {};
+        for (var attr in source) {
+          if (Object.prototype.hasOwnProperty.call(source, attr)) attrs[attr] = source[attr];
+        }
+        attrs.key = name + '-' + index;
+        children.push(h(entry[0], attrs));
+      }
+      var svgProps = {
+        className: cx('sm-ico', 'sm-ico-' + tone, props && props.className),
+        width: size,
+        height: size,
+        viewBox: '0 0 24 24',
+        fill: 'none',
+        stroke: 'currentColor',
+        strokeWidth: 1.6,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+        focusable: 'false',
+        'data-sm-icon': name || 'dot'
+      };
+      if (props && props.label) {
+        svgProps.role = 'img';
+        svgProps.title = props.label;
+        svgProps['aria-label'] = props.label;
+      } else {
+        svgProps['aria-hidden'] = 'true';
+      }
+      return h('svg', svgProps, children);
+    }
+
+    /** A status is a category: its icon, label and tone come from the one table. */
+    function StatusIcon(props) {
+      var status = props && props.status;
+      var meta = iconMetaOf('status', status);
+      var label = statusLabel(status);
+      return h('span', {
+        className: cx('sm-status-icon', props && props.className),
+        role: 'img',
+        title: label,
+        'aria-label': label,
+        'data-sm-status': status
+      }, h(Icon, { key: 'svg', name: meta.icon, tone: meta.tone, size: props && props.size ? props.size : 14 }));
+    }
+
+    /** Decorative icon for a group head: the adjacent group name is the name. */
+    function GroupIcon(props) {
+      var meta = groupIconMeta(props && props.groupKey);
+      return h(Icon, { key: 'icon', name: meta.icon, tone: meta.tone, size: props && props.size ? props.size : 14 });
+    }
+
+    /** Text badge plus its category glyph; decorative because the text is there. */
+    function Badge(props) {
+      return h('span', {
+        key: props.badgeKey,
+        className: cx('sm-badge', props.className),
+        title: props.title
+      }, [
+        props.icon ? h(Icon, { key: 'icon', name: props.icon, tone: props.tone || 'muted', size: 11 }) : null,
+        h('span', { key: 'label' }, props.label)
+      ]);
+    }
     var ARCHIVE_VIEWS = ['hide', 'include', 'only'];
     var RULE_FIELDS = ['title', 'firstMessage', 'cwd', 'note'];
     /** PRD §3 lists the shipped interaction kinds; other domains stay pending. */
@@ -1169,11 +1340,17 @@ window.__ModuleLoader__.load({
       if (!meta) return null;
       var status = metaStatus(meta);
       var tags = asTags(meta.tags);
-      return h('span', {
-        className: 'sm-native-badge',
-        title: tags.length > 0 ? t('menu.tagsWith', { tags: tags.join('、') }) : statusLabel(status)
-      }, [
-        h('span', { key: 'dot', className: 'sm-native-badge-dot sm-dot-' + status }),
+      var badgeTitle = tags.length > 0
+        ? statusLabel(status) + ' · ' + t('menu.tagsWith', { tags: tags.join('、') })
+        : statusLabel(status);
+      return h('span', { className: 'sm-native-badge', title: badgeTitle }, [
+        h(StatusDot, { key: 'dot', status: status, size: 12, className: 'sm-native-badge-dot' }),
+        tags.length > 0 ? h('span', { key: 'sep', className: 'sm-native-badge-sep' }, h(Icon, {
+          key: 'tag',
+          name: 'tag',
+          tone: 'muted',
+          size: 10
+        })) : null,
         tags.length > 0 ? h('span', { key: 'count', className: 'sm-native-badge-count' }, String(tags.length)) : null
       ]);
     }
@@ -1198,7 +1375,10 @@ window.__ModuleLoader__.load({
           h('span', { key: 'label', className: 'sm-native-hover-status' }, statusLabel(status))
         ]),
         tags.length > 0 ? h('div', { key: 'tags', className: 'sm-native-hover-tags' }, tags.map(function (tag) {
-          return h('span', { key: tag, className: 'sm-native-hover-tag' }, tag);
+          return h('span', { key: tag, className: 'sm-native-hover-tag' }, [
+            h(Icon, { key: 'icon', name: 'tag', tone: 'muted', size: 10 }),
+            h('span', { key: 'text' }, tag)
+          ]);
         })) : null
       ]);
     }
@@ -1801,10 +1981,10 @@ window.__ModuleLoader__.load({
     }
 
     function StatusDot(props) {
-      return h('span', {
-        className: 'sm-dot sm-dot-' + props.status,
-        title: t('status.' + props.status),
-        'aria-label': t('status.' + props.status)
+      return h(StatusIcon, {
+        status: props.status,
+        size: props.size || 14,
+        className: cx('sm-dot', 'sm-dot-' + props.status, props.className)
       });
     }
 
@@ -1813,6 +1993,7 @@ window.__ModuleLoader__.load({
         className: cx('sm-chip', props.muted && 'sm-chip-muted', props.removable && 'sm-chip-removable'),
         title: props.title || props.label
       }, [
+        h(Icon, { key: 'icon', name: 'tag', tone: props.muted ? 'muted' : 'brand', size: 11 }),
         h('span', { key: 'label', className: 'sm-chip-label' }, props.label),
         props.removable ? h('button', {
           key: 'x',
@@ -1883,8 +2064,15 @@ window.__ModuleLoader__.load({
     }
 
     function EmptyState(props) {
+      /* `icon` is an EMPTY_ICONS key; unknown values keep working as a glyph name. */
+      var meta = ICON_LIB.EMPTY_ICONS[props.icon] || { icon: props.icon || 'inbox', tone: 'muted' };
       return h('div', { className: 'sm-empty' }, [
-        h('span', { key: 'icon', className: 'sm-empty-icon', 'aria-hidden': 'true' }, props.icon || '○'),
+        h('span', { key: 'icon', className: 'sm-empty-icon' }, h(Icon, {
+          key: 'svg',
+          name: meta.icon,
+          tone: meta.tone,
+          size: 22
+        })),
         h('h3', { key: 'title', className: 'sm-empty-title' }, props.title),
         props.body ? h('p', { key: 'body', className: 'sm-empty-body' }, props.body) : null,
         props.action ? h('div', { key: 'action', className: 'sm-empty-action' }, props.action) : null
@@ -1970,10 +2158,31 @@ window.__ModuleLoader__.load({
         h('div', { key: 'main', className: 'sm-row-main' }, [
           h('div', { key: 'top', className: 'sm-row-top' }, [
             h('span', { key: 'title', className: 'sm-row-title', title: title }, title),
-            row.titleLocked ? h('span', { key: 'lock', className: 'sm-badge', title: t('row.locked') }, t('common.locked')) : null,
-            row.archived ? h('span', { key: 'arch', className: 'sm-badge' }, t('row.archived')) : null,
-            row.pinned ? h('span', { key: 'pin', className: 'sm-badge' }, t('row.pinned')) : null,
-            row.subagent ? h('span', { key: 'sub', className: 'sm-badge' }, t('row.subagent')) : null
+            row.titleLocked ? h(Badge, {
+              badgeKey: 'lock',
+              icon: 'lock',
+              tone: 'muted',
+              label: t('common.locked'),
+              title: t('row.locked')
+            }) : null,
+            row.archived ? h(Badge, {
+              badgeKey: 'arch',
+              icon: 'archive',
+              tone: 'muted',
+              label: t('row.archived')
+            }) : null,
+            row.pinned ? h(Badge, {
+              badgeKey: 'pin',
+              icon: 'pin',
+              tone: 'brand',
+              label: t('row.pinned')
+            }) : null,
+            row.subagent ? h(Badge, {
+              badgeKey: 'sub',
+              icon: 'branch',
+              tone: 'muted',
+              label: t('row.subagent')
+            }) : null
           ]),
           (cwd || row.note || row.intent) ? h('div', { key: 'sub', className: 'sm-row-sub' }, [
             cwd ? h('span', { key: 'cwd', className: 'sm-row-ws', title: row.cwd || cwd }, cwd) : null,
@@ -2172,7 +2381,20 @@ window.__ModuleLoader__.load({
       return tf('job.summary', { done: job.done, failed: job.failed, skipped: job.skipped });
     }
 
-    /** Toolbar task indicator (PRD §7.4): spinner+progress while busy, result dot when idle. */
+    /** Job state → icon, from the same category table as every other status. */
+    function JobStateIcon(props) {
+      var state = props && props.state ? props.state : 'idle';
+      var meta = iconMetaOf('job', state);
+      return h(Icon, {
+        key: 'icon',
+        name: meta.icon,
+        tone: meta.tone,
+        size: props && props.size ? props.size : 13,
+        className: cx('sm-job-icon', state === 'running' && 'sm-job-icon-running')
+      });
+    }
+
+    /** Toolbar task indicator (PRD §7.4): spinner+progress while busy, result icon when idle. */
     function JobsIndicator(props) {
       var active = Array.isArray(props.activeJobs) ? props.activeJobs : [];
       var latest = props.latest || null;
@@ -2184,7 +2406,7 @@ window.__ModuleLoader__.load({
           title: t('job.unavailableHint'),
           disabled: true
         }, [
-          h('span', { key: 'dot', className: 'sm-job-dot sm-job-dot-idle' }),
+          h(JobStateIcon, { key: 'icon', state: 'idle' }),
           h('span', { key: 'label', className: 'sm-jobs-label' }, t('job.unavailable'))
         ]);
       }
@@ -2210,7 +2432,7 @@ window.__ModuleLoader__.load({
         'aria-expanded': props.open ? 'true' : 'false',
         onClick: props.onToggle
       }, [
-        h('span', { key: 'dot', className: cx('sm-job-dot', latest ? 'sm-job-dot-' + latest.state : 'sm-job-dot-idle') }),
+        h(JobStateIcon, { key: 'icon', state: latest ? latest.state : 'idle' }),
         h('span', { key: 'label', className: 'sm-jobs-label' }, t('job.title')),
         latest ? h('span', { key: 'state', className: 'sm-jobs-state' }, jobStateLabel(latest.state)) : null
       ]);
@@ -2246,7 +2468,7 @@ window.__ModuleLoader__.load({
       var canExpand = !job.active && (job.failed > 0 || Boolean(job.errorText) || job.items.length > 0 || job.state === 'cancelled' || job.state === 'interrupted');
       return h('div', { className: cx('sm-job', 'sm-job-' + job.state) }, [
         h('div', { key: 'row', className: 'sm-job-row' }, [
-          h('span', { key: 'dot', className: cx('sm-job-dot', 'sm-job-dot-' + job.state), 'aria-hidden': 'true' }),
+          h(JobStateIcon, { key: 'icon', state: job.state }),
           h('div', { key: 'main', className: 'sm-job-main' }, [
             h('div', { key: 'top', className: 'sm-job-top' }, [
               h('span', { key: 'type', className: 'sm-job-type' }, jobTypeLabel(job.type)),
@@ -2761,6 +2983,36 @@ window.__ModuleLoader__.load({
           ]
         }, h('p', { key: 'body', className: 'sm-dialog-warning' }, t('delete.body'))) : null
       ]);
+    }
+
+    /**
+     * One group head: caret, category glyph, name, total and per-status counts.
+     * The glyph comes from `groupIconMeta` so the same group has the same icon
+     * in list, table and filter surfaces.
+     */
+    function GroupHeadContent(props) {
+      var group = props.group;
+      return [
+        h('span', {
+          key: 'caret',
+          className: cx('sm-caret', !props.collapsed && 'sm-caret-open'),
+          'aria-hidden': 'true'
+        }, '›'),
+        h('span', { key: 'icon', className: 'sm-group-icon' }, h(GroupIcon, {
+          key: 'glyph',
+          groupKey: group.key,
+          size: 15
+        })),
+        h('span', { key: 'name', className: 'sm-group-name' }, groupLabel(group)),
+        h('span', { key: 'total', className: 'sm-group-total' }, tf('group.total', { n: group.total })),
+        h('span', { key: 'counts', className: 'sm-group-counts' }, GROUP_COUNT_IDS.map(function (id) {
+          if (!group.counts[id]) return null;
+          return h('span', { key: id, className: 'sm-group-count', title: statusLabel(id) }, [
+            h(StatusDot, { key: 'dot', status: id, size: 12 }),
+            h('span', { key: 'n', className: 'sm-group-count-n' }, String(group.counts[id]))
+          ]);
+        }))
+      ];
     }
 
     /* ------------------------------------------------------------------ *
@@ -3863,7 +4115,10 @@ window.__ModuleLoader__.load({
           onClick: function () { toggleFilter('statuses', id); }
         }, [
           h('span', { key: 'num', className: 'sm-overview-num' }, String(overview[id] || 0)),
-          h('span', { key: 'label', className: 'sm-overview-label' }, statusLabel(id))
+          h('span', { key: 'label', className: 'sm-overview-label' }, [
+            h(Icon, { key: 'icon', name: iconMetaOf('status', id).icon, tone: iconMetaOf('status', id).tone, size: 13 }),
+            h('span', { key: 'text' }, statusLabel(id))
+          ])
         ]);
       }));
 
@@ -3884,7 +4139,15 @@ window.__ModuleLoader__.load({
             className: cx('sm-seg-btn', groupBy === id && 'sm-seg-btn-active'),
             'aria-pressed': groupBy === id ? 'true' : 'false',
             onClick: function () { setGroupBy(id); }
-          }, t('groupBy.' + id));
+          }, [
+            h(Icon, {
+              key: 'icon',
+              name: iconMetaOf('group', id).icon,
+              tone: iconMetaOf('group', id).tone,
+              size: 13
+            }),
+            h('span', { key: 'label' }, t('groupBy.' + id))
+          ]);
         })),
         Array.isArray(groupOrder[groupBy]) && groupOrder[groupBy].length > 0 ? h(Btn, {
           key: 'resetOrder',
@@ -3893,6 +4156,7 @@ window.__ModuleLoader__.load({
           onClick: resetGroupOrder
         }, t('group.resetOrder')) : null,
         h('label', { key: 'archive', className: 'sm-select' }, [
+          h(Icon, { key: 'icon', name: 'archive', tone: 'muted', size: 13 }),
           h('span', { key: 'label', className: 'sm-select-label' }, t('toolbar.archive')),
           h('select', {
             key: 'control',
@@ -3909,6 +4173,7 @@ window.__ModuleLoader__.load({
             checked: showSubagents,
             onChange: function (event) { setShowSubagents(event.target.checked); }
           }),
+          h(Icon, { key: 'icon', name: 'branch', tone: 'muted', size: 12 }),
           h('span', { key: 'text' }, t('toolbar.showSubagents'))
         ]),
         h('span', { key: 'spacer', className: 'sm-toolbar-spacer' }),
@@ -3969,9 +4234,18 @@ window.__ModuleLoader__.load({
             className: cx('sm-filter-chip', activeFilter && 'sm-filter-chip-active'),
             'aria-pressed': activeFilter ? 'true' : 'false',
             onClick: function () { toggleFilter('buckets', id); }
-          }, t('bucket.' + id));
+          }, [
+            h(Icon, {
+              key: 'icon',
+              name: iconMetaOf('bucket', id).icon,
+              tone: iconMetaOf('bucket', id).tone,
+              size: 13
+            }),
+            h('span', { key: 'label' }, t('bucket.' + id))
+          ]);
         })),
         h('div', { key: 'tags', className: 'sm-filter-group sm-filter-tags' }, [
+          h(Icon, { key: 'tag-icon', name: 'tag', tone: 'muted', size: 13 }),
           h('select', {
             key: 'select',
             className: 'sm-tag-select',
@@ -4009,7 +4283,7 @@ window.__ModuleLoader__.load({
         }));
       } else if (phase === 'error') {
         body = h('div', { key: 'error', className: 'sm-error-wrap' }, h(EmptyState, {
-          icon: '!',
+          icon: 'error',
           title: t('error.title'),
           body: [
             error && error.message ? error.message : '',
@@ -4023,13 +4297,13 @@ window.__ModuleLoader__.load({
         }));
       } else if (rows.length === 0) {
         body = h('div', { key: 'empty', className: 'sm-empty-wrap' }, h(EmptyState, {
-          icon: '○',
+          icon: 'empty',
           title: t('list.empty.title'),
           body: t('list.empty.body')
         }));
       } else if (visible.length === 0) {
         body = h('div', { key: 'filtered', className: 'sm-empty-wrap' }, h(EmptyState, {
-          icon: '○',
+          icon: 'filtered',
           title: t('list.filtered.title'),
           body: t('list.filtered.body'),
           action: h(Btn, { key: 'clear', onClick: function () { clearFilters(); setQuery(''); } }, t('filter.clear'))
@@ -4117,16 +4391,7 @@ window.__ModuleLoader__.load({
                 'aria-expanded': isCollapsed ? 'false' : 'true',
                 onClick: function () { toggleCollapsedGroup(group.key); }
               }, [
-              h('span', { key: 'caret', className: cx('sm-caret', !isCollapsed && 'sm-caret-open'), 'aria-hidden': 'true' }, '›'),
-              h('span', { key: 'name', className: 'sm-group-name' }, groupLabel(group)),
-              h('span', { key: 'total', className: 'sm-group-total' }, tf('group.total', { n: group.total })),
-              h('span', { key: 'counts', className: 'sm-group-counts' }, GROUP_COUNT_IDS.map(function (id) {
-                if (!group.counts[id]) return null;
-                return h('span', { key: id, className: 'sm-group-count', title: statusLabel(id) }, [
-                  h(StatusDot, { key: 'dot', status: id }),
-                  h('span', { key: 'n', className: 'sm-group-count-n' }, String(group.counts[id]))
-                ]);
-              }))
+              h(GroupHeadContent, { key: 'content', group: group, collapsed: isCollapsed })
             ]),
               moveButtons
             ]),
@@ -4461,7 +4726,7 @@ window.__ModuleLoader__.load({
 
       var content;
       if (items.length === 0) {
-        content = h(EmptyState, { key: 'empty', icon: '○', title: t('rename.empty') });
+        content = h(EmptyState, { key: 'empty', icon: 'empty', title: t('rename.empty') });
       } else {
         content = h('div', { key: 'list', className: 'sm-preview-list' }, items.map(function (item) {
           var isRemoved = removed.indexOf(item.sessionId) >= 0;
@@ -4482,7 +4747,10 @@ window.__ModuleLoader__.load({
                 key: 'skip',
                 className: 'sm-skip-badge',
                 title: item.detail || ''
-              }, t('rename.skip') + ': ' + skipLabel(item.skipReason)) : null,
+              }, [
+                h(Icon, { key: 'icon', name: 'alert', tone: 'warn', size: 10 }),
+                h('span', { key: 'text' }, t('rename.skip') + ': ' + skipLabel(item.skipReason))
+              ]) : null,
               skipped && item.detail ? h('p', { key: 'skip-detail', className: 'sm-hint' }, item.detail) : null
             ]),
             h('div', { key: 'actions', className: 'sm-preview-actions' }, skipped ? null : h(Btn, {
@@ -4558,7 +4826,7 @@ window.__ModuleLoader__.load({
 
       var content;
       if (items.length === 0) {
-        content = h(EmptyState, { key: 'empty', icon: '○', title: t('tagsPreview.empty') });
+        content = h(EmptyState, { key: 'empty', icon: 'tag', title: t('tagsPreview.empty') });
       } else {
         content = h('div', { key: 'list', className: 'sm-preview-list' }, items.map(function (item) {
           var skipped = Boolean(item.skipReason);
@@ -4575,7 +4843,10 @@ window.__ModuleLoader__.load({
                 key: 'skip',
                 className: 'sm-skip-badge',
                 title: item.detail || ''
-              }, t('rename.skip') + ': ' + skipLabel(item.skipReason)) : null,
+              }, [
+                h(Icon, { key: 'icon', name: 'alert', tone: 'warn', size: 10 }),
+                h('span', { key: 'text' }, t('rename.skip') + ': ' + skipLabel(item.skipReason))
+              ]) : null,
               skipped && item.detail ? h('p', { key: 'skip-detail', className: 'sm-hint' }, item.detail) : null,
               skipped ? null : h('div', { key: 'tags', className: 'sm-preview-tags' }, [
                 h('div', { key: 'chips', className: 'sm-preview-chips' }, tags.map(function (tag) {
@@ -4776,7 +5047,7 @@ window.__ModuleLoader__.load({
       } else if (visible.length === 0) {
         listBody = h(EmptyState, {
           key: 'empty',
-          icon: '○',
+          icon: needle === '' ? 'tag' : 'search',
           title: needle === '' ? t('tagManager.empty') : t('tagManager.search'),
           body: needle === '' ? t('tagManager.emptyHint') : undefined
         });
@@ -4807,8 +5078,16 @@ window.__ModuleLoader__.load({
                   h(Btn, { key: 'cancel', disabled: localBusy, onClick: function () { setEditing(null); } }, t('action.cancel'))
                 ])
                 : h('div', { key: 'head', className: 'sm-tagmanage-head' }, [
-                  h('span', { key: 'name', className: 'sm-tagmanage-name' }, def.name),
-                  h('span', { key: 'source', className: 'sm-badge' }, t('tagManager.source.' + (def.source || 'manual'))),
+                  h('span', { key: 'name', className: 'sm-tagmanage-name' }, [
+                    h(Icon, { key: 'icon', name: 'tag', tone: 'brand', size: 12 }),
+                    h('span', { key: 'text' }, def.name)
+                  ]),
+                  h(Badge, {
+                    badgeKey: 'source',
+                    icon: iconMetaOf('tagSource', def.source || 'manual').icon,
+                    tone: iconMetaOf('tagSource', def.source || 'manual').tone,
+                    label: t('tagManager.source.' + (def.source || 'manual'))
+                  }),
                   usage ? h('span', { key: 'usage', className: 'sm-hint' }, usage) : h('span', { key: 'unused', className: 'sm-hint' }, t('common.none'))
                 ]),
               isConfirming ? h('p', { key: 'confirm', className: 'sm-dialog-warning' }, [
@@ -5059,7 +5338,7 @@ window.__ModuleLoader__.load({
 
       var content;
       if (items === null) content = h('p', { key: 'loading', className: 'sm-hint' }, t('common.loading'));
-      else if (items.length === 0) content = h(EmptyState, { key: 'empty', icon: '○', title: t('trash.empty') });
+      else if (items.length === 0) content = h(EmptyState, { key: 'empty', icon: 'trash', title: t('trash.empty') });
       else content = h('div', { key: 'list', className: 'sm-trash-list' }, items.map(function (item) {
         return h(TrashRow, {
           key: item.sessionId,
@@ -5106,7 +5385,7 @@ window.__ModuleLoader__.load({
           h(Btn, { key: 'apply', variant: 'primary', disabled: props.busy || candidates.length === 0, onClick: props.onApply }, t('fill.apply'))
         ]
       }, candidates.length === 0
-        ? h(EmptyState, { key: 'empty', icon: '○', title: t('fill.none') })
+        ? h(EmptyState, { key: 'empty', icon: 'empty', title: t('fill.none') })
         : h('ul', { key: 'list', className: 'sm-fill-list' }, candidates.map(function (item) {
           return h('li', { key: item.sessionId, className: 'sm-fill-item' }, [
             h('span', { key: 'title', className: 'sm-trash-title' }, item.title || item.sessionId),
@@ -5392,16 +5671,29 @@ window.__ModuleLoader__.load({
         ]),
         status ? h('p', { key: 'status', className: cx('sm-status-text', status.kind === 'error' && 'sm-status-error') }, status.text) : null,
         rules.length === 0
-          ? h(EmptyState, { key: 'empty', icon: '○', title: t('rules.empty'), body: t('rules.subtitle') })
+          ? h(EmptyState, { key: 'empty', icon: 'rule', title: t('rules.empty'), body: t('rules.subtitle') })
           : h('ul', { key: 'items', className: 'sm-rule-list' }, rules.map(function (rule) {
             var action = rule.action || {};
             var match = rule.match || {};
             return h('li', { key: rule.id, className: 'sm-rule' }, [
               h('div', { key: 'main', className: 'sm-rule-main' }, [
                 h('div', { key: 'head', className: 'sm-rule-head' }, [
-                  h('span', { key: 'name', className: 'sm-rule-name' }, rule.name || t('rules.untitled')),
-                  h('span', { key: 'mode', className: 'sm-badge' }, t('rules.actionMode.' + (action.mode === 'apply' ? 'apply' : 'suggest'))),
-                  rule.enabled === false ? h('span', { key: 'off', className: 'sm-badge' }, t('rules.enabled') + ': ' + t('common.none')) : null
+                  h('span', { key: 'name', className: 'sm-rule-name' }, [
+                    h(Icon, { key: 'icon', name: 'funnel', tone: 'brand', size: 12 }),
+                    h('span', { key: 'text' }, rule.name || t('rules.untitled'))
+                  ]),
+                  h(Badge, {
+                    badgeKey: 'mode',
+                    icon: iconMetaOf('ruleMode', action.mode === 'apply' ? 'apply' : 'suggest').icon,
+                    tone: iconMetaOf('ruleMode', action.mode === 'apply' ? 'apply' : 'suggest').tone,
+                    label: t('rules.actionMode.' + (action.mode === 'apply' ? 'apply' : 'suggest'))
+                  }),
+                  rule.enabled === false ? h(Badge, {
+                    badgeKey: 'off',
+                    icon: 'stop',
+                    tone: 'muted',
+                    label: t('rules.enabled') + ': ' + t('common.none')
+                  }) : null
                 ]),
                 h('div', { key: 'meta', className: 'sm-rule-meta' }, [
                   h('span', { key: 'keywords', className: 'sm-hint' }, (Array.isArray(match.keywords) ? match.keywords : []).join(' / ')),
@@ -5471,6 +5763,15 @@ window.__ModuleLoader__.load({
     var CSS = [
       '.sm-page{position:relative;display:flex;flex-direction:column;gap:12px;height:100%;min-height:0;padding:20px 24px 0;color:var(--dsw-alias-label-primary,#1f2328);}',
       '.sm-page:focus{outline:none;}',
+      '.sm-ico{display:inline-block;flex:0 0 auto;vertical-align:middle;overflow:visible;}',
+      '.sm-ico-neutral{color:var(--dsw-alias-label-secondary,#6b7280);}',
+      '.sm-ico-muted{color:var(--dsw-alias-label-tertiary,#9ca3af);}',
+      '.sm-ico-brand{color:var(--dsw-alias-brand-primary,#3b82f6);}',
+      '.sm-ico-warn{color:var(--dsw-alias-state-warn-primary,#d97706);}',
+      '.sm-ico-error{color:var(--dsw-alias-state-error-primary,#dc2626);}',
+      '.sm-ico-success{color:var(--dsw-alias-state-success-primary,#16a34a);}',
+      '.sm-status-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;line-height:0;}',
+      '.sm-status-icon>.sm-ico{display:block;}',
       '.sm-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}',
       '.sm-head-titles{display:flex;flex-direction:column;gap:2px;min-width:0;}',
       '.sm-head-title{margin:0;font-size:20px;line-height:1.3;font-weight:600;}',
@@ -5487,11 +5788,11 @@ window.__ModuleLoader__.load({
       '.sm-btn-danger{border-color:var(--dsw-alias-state-error-primary,#dc2626);color:var(--dsw-alias-state-error-primary,#dc2626);background:transparent;}',
       '.sm-btn-danger:hover:not(:disabled){background:color-mix(in srgb,var(--dsw-alias-state-error-primary,#dc2626) 10%,transparent);}',
       '.sm-overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}',
-      '.sm-overview-card{appearance:none;text-align:left;display:flex;flex-direction:column;gap:2px;padding:8px 12px;border-radius:8px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.24));background:var(--dsw-alias-bg-layer-1,rgba(127,127,127,.05));color:inherit;cursor:pointer;}',
+      '.sm-overview-card{appearance:none;text-align:left;display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:9px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.24));background:var(--dsw-alias-bg-layer-1,rgba(127,127,127,.05));color:inherit;cursor:pointer;}',
       '.sm-overview-card:hover{background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.1));}',
       '.sm-overview-active{border-color:var(--dsw-alias-brand-primary,#3b82f6);box-shadow:inset 0 0 0 1px var(--dsw-alias-brand-primary,#3b82f6);}',
-      '.sm-overview-num{font-size:20px;font-weight:600;line-height:1.1;}',
-      '.sm-overview-label{font-size:11px;color:var(--dsw-alias-label-secondary,#6b7280);}',
+      '.sm-overview-num{font-size:22px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums;}',
+      '.sm-overview-label{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--dsw-alias-label-secondary,#6b7280);}',
       '.sm-overview-pending .sm-overview-num{color:var(--dsw-alias-state-warn-primary,#d97706);}',
       '.sm-overview-blocked .sm-overview-num{color:var(--dsw-alias-state-warn-primary,#d97706);}',
       '.sm-overview-failed .sm-overview-num{color:var(--dsw-alias-state-error-primary,#dc2626);}',
@@ -5500,10 +5801,10 @@ window.__ModuleLoader__.load({
       '.sm-search{flex:1 1 220px;min-width:180px;max-width:420px;padding:7px 10px;border-radius:6px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.28));background:var(--dsw-alias-bg-base,#fff);color:inherit;font-size:12px;}',
       '.sm-search:focus{outline:1px solid var(--dsw-alias-brand-primary,#3b82f6);outline-offset:0;}',
       '.sm-seg{display:inline-flex;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.28));border-radius:6px;overflow:hidden;}',
-      '.sm-seg-btn{appearance:none;border:0;border-right:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.24));background:transparent;color:var(--dsw-alias-label-secondary,#6b7280);font-size:12px;padding:7px 9px;cursor:pointer;}',
+      '.sm-seg-btn{appearance:none;border:0;border-right:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.24));background:transparent;color:var(--dsw-alias-label-secondary,#6b7280);display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:7px 10px;cursor:pointer;}',
       '.sm-seg-btn:last-child{border-right:0;}',
       '.sm-seg-btn-active{background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.12));color:var(--dsw-alias-label-primary,#1f2328);font-weight:600;}',
-      '.sm-select{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--dsw-alias-label-secondary,#6b7280);}',
+      '.sm-select{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--dsw-alias-label-secondary,#6b7280);line-height:1;}',
       '.sm-select select,.sm-tag-select{padding:6px 8px;border-radius:6px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.28));background:var(--dsw-alias-bg-base,#fff);color:inherit;font-size:12px;}',
       '.sm-check-label{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--dsw-alias-label-secondary,#6b7280);cursor:pointer;white-space:nowrap;}',
       '.sm-toolbar-spacer,.sm-batch-spacer{flex:1 1 auto;}',
@@ -5511,7 +5812,7 @@ window.__ModuleLoader__.load({
       '.sm-filters-title{font-size:11px;font-weight:600;color:var(--dsw-alias-label-secondary,#6b7280);}',
       '.sm-filter-group{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;padding-right:6px;border-right:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.16));}',
       '.sm-filter-group:last-of-type{border-right:0;}',
-      '.sm-filter-chip{appearance:none;display:inline-flex;align-items:center;gap:4px;border:1px solid transparent;background:transparent;color:var(--dsw-alias-label-secondary,#6b7280);font-size:11px;padding:4px 7px;border-radius:999px;cursor:pointer;}',
+      '.sm-filter-chip{appearance:none;display:inline-flex;align-items:center;gap:5px;height:24px;border:1px solid transparent;background:transparent;color:var(--dsw-alias-label-secondary,#6b7280);font-size:11px;padding:0 8px;border-radius:999px;cursor:pointer;}',
       '.sm-filter-chip:hover{background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.1));}',
       '.sm-filter-chip-active{border-color:var(--dsw-alias-brand-primary,#3b82f6);color:var(--dsw-alias-label-primary,#1f2328);background:color-mix(in srgb,var(--dsw-alias-brand-primary,#3b82f6) 10%,transparent);}',
       '.sm-filter-tags{gap:6px;}',
@@ -5536,13 +5837,14 @@ window.__ModuleLoader__.load({
       '.sm-group-move{appearance:none;border:0;background:transparent;color:var(--dsw-alias-label-secondary,#6b7280);font-size:12px;line-height:1;width:20px;height:20px;border-radius:4px;cursor:pointer;}',
       '.sm-group-move:hover:not(:disabled){background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.14));color:var(--dsw-alias-label-primary,#1f2328);}',
       '.sm-group-move:disabled{opacity:.25;cursor:default;}',
-      '.sm-group-head{appearance:none;flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;padding:8px 4px 8px 6px;border:0;background:transparent;color:inherit;cursor:pointer;text-align:left;}',
+      '.sm-group-head{appearance:none;flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;padding:9px 6px 9px 8px;border:0;background:transparent;color:inherit;cursor:pointer;text-align:left;}',
       '.sm-group-head:hover{background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.07));border-radius:8px;}',
       '.sm-caret{display:inline-block;font-size:14px;color:var(--dsw-alias-label-secondary,#6b7280);transform:rotate(0deg);transition:transform .12s ease;}',
       '.sm-caret-open{transform:rotate(90deg);}',
+      '.sm-group-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;flex:0 0 auto;line-height:0;color:var(--dsw-alias-label-secondary,#6b7280);}',
       '.sm-group-name{font-size:13px;font-weight:600;}',
       '.sm-group-total{font-size:11px;color:var(--dsw-alias-label-secondary,#6b7280);}',
-      '.sm-group-counts{display:inline-flex;align-items:center;gap:10px;margin-left:auto;}',
+      '.sm-group-counts{display:inline-flex;align-items:center;gap:8px;margin-left:auto;}',
       '.sm-group-count{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--dsw-alias-label-secondary,#6b7280);}',
       '.sm-group-count-n{font-variant-numeric:tabular-nums;}',
       '.sm-group-rows{display:flex;flex-direction:column;border-top:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.14));}',
@@ -5553,32 +5855,33 @@ window.__ModuleLoader__.load({
       '.sm-row-archived{opacity:.72;}',
       '.sm-check{margin:0;accent-color:var(--dsw-alias-brand-primary,#3b82f6);flex-shrink:0;}',
       '.sm-row-dot{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}',
-      '.sm-dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--dsw-alias-state-idle-primary,#9ca3af);}',
-      '.sm-dot-pending{background:var(--dsw-alias-state-warn-primary,#d97706);}',
-      '.sm-dot-running{background:var(--dsw-alias-brand-primary,#3b82f6);animation:sm-pulse 1.2s ease-in-out infinite;}',
-      '.sm-dot-blocked{background:var(--dsw-alias-state-warn-primary,#d97706);box-shadow:0 0 0 2px color-mix(in srgb,var(--dsw-alias-state-warn-primary,#d97706) 25%,transparent);}',
-      '.sm-dot-failed{background:var(--dsw-alias-state-error-primary,#dc2626);}',
-      '.sm-dot-unread{background:var(--dsw-alias-state-success-primary,#16a34a);}',
-      '.sm-dot-completed{background:var(--dsw-alias-state-success-primary,#16a34a);opacity:.55;}',
-      '.sm-dot-interrupted{background:var(--dsw-alias-label-secondary,#6b7280);}',
-      '.sm-native-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;line-height:1;color:var(--dsw-alias-label-secondary,#6b7280);}',
-      '.sm-native-badge-dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--dsw-alias-state-idle-primary,#9ca3af);}',
+      '.sm-dot{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex:0 0 auto;line-height:0;}',
+      '.sm-dot-pending .sm-ico{color:var(--dsw-alias-state-warn-primary,#d97706);}',
+      '.sm-dot-running .sm-ico{color:var(--dsw-alias-brand-primary,#3b82f6);animation:sm-pulse 1.2s ease-in-out infinite;}',
+      '.sm-dot-blocked .sm-ico{color:var(--dsw-alias-state-warn-primary,#d97706);}',
+      '.sm-dot-failed .sm-ico{color:var(--dsw-alias-state-error-primary,#dc2626);}',
+      '.sm-dot-unread .sm-ico{color:var(--dsw-alias-state-success-primary,#16a34a);}',
+      '.sm-dot-completed .sm-ico{color:var(--dsw-alias-state-success-primary,#16a34a);opacity:.72;}',
+      '.sm-dot-interrupted .sm-ico{color:var(--dsw-alias-label-secondary,#6b7280);}',
+      '.sm-native-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;line-height:1;color:var(--dsw-alias-label-secondary,#6b7280);}',
+      '.sm-native-badge-dot{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;line-height:0;}',
+      '.sm-native-badge-sep{display:inline-flex;align-items:center;line-height:0;}',
       '.sm-native-badge-count{font-variant-numeric:tabular-nums;}',
       '.sm-native-hover{display:flex;flex-direction:column;gap:4px;padding:2px 0;font-size:11px;color:var(--dsw-alias-label-secondary,#6b7280);}',
       '.sm-native-hover-row{display:flex;align-items:center;gap:5px;}',
       '.sm-native-hover-status{color:var(--dsw-alias-label-primary,#1f2328);}',
       '.sm-native-hover-tags{display:flex;flex-wrap:wrap;gap:4px;}',
-      '.sm-native-hover-tag{padding:0 5px;height:16px;line-height:16px;border-radius:3px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.14));color:var(--dsw-alias-label-primary,#1f2328);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+      '.sm-native-hover-tag{display:inline-flex;align-items:center;gap:4px;padding:0 6px;height:18px;line-height:1;border-radius:4px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.14));color:var(--dsw-alias-label-primary,#1f2328);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
       '.sm-row-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px;}',
       '.sm-row-top{display:flex;align-items:center;gap:6px;min-width:0;}',
       '.sm-row-title{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
-      '.sm-badge{font-size:10px;line-height:1.4;padding:0 5px;border-radius:4px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.3));color:var(--dsw-alias-label-secondary,#6b7280);white-space:nowrap;flex-shrink:0;}',
+      '.sm-badge{display:inline-flex;align-items:center;gap:3px;height:18px;font-size:10px;line-height:1;padding:0 6px;border-radius:5px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.3));color:var(--dsw-alias-label-secondary,#6b7280);white-space:nowrap;flex-shrink:0;}',
       '.sm-row-sub{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dsw-alias-label-secondary,#6b7280);min-width:0;}',
       '.sm-row-ws{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px;}',
       '.sm-row-note{flex-shrink:0;}',
       '.sm-row-intent{flex-shrink:0;padding:0 5px;border-radius:4px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.12));}',
       '.sm-row-tags{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:2px;}',
-      '.sm-chip{display:inline-flex;align-items:center;gap:3px;padding:0 6px;height:18px;border-radius:4px;font-size:10px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.14));color:var(--dsw-alias-label-primary,#1f2328);max-width:160px;}',
+      '.sm-chip{display:inline-flex;align-items:center;gap:4px;padding:0 7px;height:20px;border-radius:6px;font-size:11px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.14));color:var(--dsw-alias-label-primary,#1f2328);max-width:170px;}',
       '.sm-chip-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
       '.sm-chip-muted{background:transparent;border:1px dashed var(--dsw-alias-border-l2,rgba(127,127,127,.45));color:var(--dsw-alias-label-secondary,#6b7280);}',
       '.sm-chip-x{appearance:none;border:0;background:transparent;color:inherit;padding:0;margin-left:2px;cursor:pointer;font-size:11px;line-height:1;}',
@@ -5604,7 +5907,7 @@ window.__ModuleLoader__.load({
       '.sm-dialog-note{margin:0;font-size:11px;color:var(--dsw-alias-label-secondary,#6b7280);}',
       '.sm-dialog-warning{margin:0;padding:10px 12px;border-radius:8px;border:1px solid var(--dsw-alias-state-error-primary,#dc2626);color:var(--dsw-alias-state-error-primary,#dc2626);font-size:12px;}',
       '.sm-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:40px 16px;text-align:center;}',
-      '.sm-empty-icon{font-size:22px;color:var(--dsw-alias-label-secondary,#6b7280);}',
+      '.sm-empty-icon{display:inline-flex;align-items:center;justify-content:center;line-height:0;}',
       '.sm-empty-title{margin:0;font-size:14px;font-weight:600;}',
       '.sm-empty-body{margin:0;font-size:12px;color:var(--dsw-alias-label-secondary,#6b7280);max-width:420px;}',
       '.sm-empty-action{margin-top:8px;}',
@@ -5627,7 +5930,7 @@ window.__ModuleLoader__.load({
       '.sm-preview-tags{display:flex;flex-direction:column;gap:4px;}',
       '.sm-preview-chips{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;}',
       '.sm-intent{font-size:10px;padding:0 6px;height:18px;line-height:18px;border-radius:4px;background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.12));color:var(--dsw-alias-label-secondary,#6b7280);}',
-      '.sm-skip-badge{font-size:10px;color:var(--dsw-alias-state-warn-primary,#d97706);}',
+      '.sm-skip-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--dsw-alias-state-warn-primary,#d97706);}',
       '.sm-form{display:flex;flex-direction:column;gap:10px;}',
       '.sm-form-row{display:flex;flex-direction:column;gap:4px;}',
       '.sm-form-label{font-size:11px;font-weight:600;color:var(--dsw-alias-label-secondary,#6b7280);}',
@@ -5651,7 +5954,8 @@ window.__ModuleLoader__.load({
       '.sm-tagmanage-item:hover{background:var(--dsw-alias-bg-layer-2,rgba(127,127,127,.05));}',
       '.sm-tagmanage-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px;}',
       '.sm-tagmanage-head{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0;}',
-      '.sm-tagmanage-name{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px;}',
+      '.sm-tagmanage-name{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px;}',
+      '.sm-tagmanage-name>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
       '.sm-tagmanage-edit{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}',
       '.sm-tagmanage-edit .sm-input{flex:1 1 160px;min-width:120px;width:auto;}',
       '.sm-tagmanage-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}',
@@ -5667,7 +5971,7 @@ window.__ModuleLoader__.load({
       '.sm-rule{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:8px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.16));}',
       '.sm-rule-main{display:flex;flex-direction:column;gap:4px;min-width:0;}',
       '.sm-rule-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}',
-      '.sm-rule-name{font-size:12px;font-weight:600;}',
+      '.sm-rule-name{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;}',
       '.sm-rule-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}',
       '.sm-rule-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;flex-wrap:wrap;}',
       '.sm-rule-form{display:flex;flex-direction:column;gap:10px;}',
@@ -5702,14 +6006,8 @@ window.__ModuleLoader__.load({
       '.sm-jobs-list{display:flex;flex-direction:column;gap:6px;}',
       '.sm-job{display:flex;flex-direction:column;gap:4px;padding:7px 8px;border-radius:8px;border:1px solid var(--dsw-alias-border-l1,rgba(127,127,127,.16));}',
       '.sm-job-row{display:flex;align-items:flex-start;gap:8px;}',
-      '.sm-job-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;background:var(--dsw-alias-label-secondary,#a1a1aa);}',
-      '.sm-job-dot-queued{background:#a1a1aa;}',
-      '.sm-job-dot-running{background:#2563eb;}',
-      '.sm-job-dot-succeeded{background:#16a34a;}',
-      '.sm-job-dot-failed{background:#dc2626;}',
-      '.sm-job-dot-cancelled{background:#a1a1aa;}',
-      '.sm-job-dot-interrupted{background:#d97706;}',
-      '.sm-job-dot-idle{background:#a1a1aa;}',
+      '.sm-job-icon{margin-top:2px;flex:0 0 auto;line-height:0;}',
+      '.sm-job-icon-running{animation:sm-pulse 1.2s ease-in-out infinite;}',
       '.sm-job-main{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;}',
       '.sm-job-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}',
       '.sm-job-type{font-size:12px;font-weight:600;}',
@@ -6009,7 +6307,11 @@ window.__ModuleLoader__.load({
         readPanelCache: readPanelCache,
         forgetPanelCache: forgetPanelCache,
         panelEscapeAction: panelEscapeAction,
-        isJobUnavailable: isJobUnavailable
+        isJobUnavailable: isJobUnavailable,
+        /* Icon contract (SPEC.md §视觉与图标契约): the map itself plus the two
+           lookup functions, so tests and consumers never re-implement them. */
+        iconMetaOf: iconMetaOf,
+        groupIconMeta: groupIconMeta
       },
       dictionary: buildDictionary(),
       api: { prefix: API_PREFIX, paths: API_PATHS },
@@ -6036,7 +6338,18 @@ window.__ModuleLoader__.load({
         JobsPanel: JobsPanel,
         JobRow: JobRow,
         DetailPane: DetailPane,
-        SkeletonList: SkeletonList
+        SkeletonList: SkeletonList,
+        Icon: Icon,
+        StatusIcon: StatusIcon,
+        StatusDot: StatusDot,
+        GroupIcon: GroupIcon,
+        GroupHeadContent: GroupHeadContent,
+        Badge: Badge,
+        JobStateIcon: JobStateIcon,
+        RowStatusBadge: RowStatusBadge,
+        RowHoverSection: RowHoverSection,
+        EmptyState: EmptyState,
+        Chip: Chip
       }
     };
 
