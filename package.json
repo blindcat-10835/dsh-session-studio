@@ -1,6 +1,6 @@
 {
   "name": "dsh-session-studio",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "DSH Web 会话管理：按状态/时间/标签分组浏览会话，标签规则、AI 批量重命名与自动打标签（预览-应用、后台任务），复用原生右键菜单（含标签子菜单）、面板内详情分栏、跳转会话，原生左栏状态/标签装饰，归档与回收站。",
   "type": "module",
   "license": "MIT",

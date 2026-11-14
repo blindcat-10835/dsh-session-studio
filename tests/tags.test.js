@@ -269,7 +269,7 @@ test('fillMissing dry-run proposes vocabulary tags for untagged sessions and wri
     { id: 'a', cwd: '/repo/huawei-bts' },
     { id: 'tagged', cwd: '/repo/huawei' },
     { id: 'blank', blank: true, cwd: '/repo/huawei' },
-    { id: 'child', parentSessionId: 'a', cwd: '/repo/huawei' },
+    { id: 'child', origin: 'subagent', parentSessionId: 'a', cwd: '/repo/huawei' },
     { id: 'archived', archived: true, cwd: '/repo/huawei' },
     { id: 'quiet', cwd: '/repo/other' },
   ]
@@ -295,6 +295,22 @@ test('fillMissing dry-run proposes vocabulary tags for untagged sessions and wri
   assert.equal(implicit.updated, 0)
   assert.deepEqual(implicit.candidates.map((candidate) => candidate.sessionId), ['a'])
   assert.deepEqual(store.sessionOf('a').suggestedTags, [], 'dry-run is the default')
+})
+
+test('fillMissing treats a forked Session as first-class, not a subagent (AIDEV-161)', async (t) => {
+  const store = makeStore(t)
+  store.ensureTagDef('华为', 'manual')
+
+  const rows = [
+    { id: 'fork', parentSessionId: 'parent', cwd: '/repo/huawei' },
+    { id: 'child', origin: 'subagent', parentSessionId: 'parent', cwd: '/repo/huawei' },
+  ]
+  const sessions = fakeSessions(rows, { fork: { title: '华为 分支排查', firstMessage: '华为 问题' } })
+  const tags = createTagService({ store, sessions, logger: silent })
+
+  const result = await tags.fillMissing({ dryRun: true })
+  assert.deepEqual(result.candidates.map((candidate) => candidate.sessionId), ['fork'], 'a fork joins the sweep; an origin-subagent does not')
+  assert.deepEqual(sessions.calls, ['fork'])
 })
 
 test('fillMissing apply writes only suggestedTags, never tags, and is idempotent', async (t) => {

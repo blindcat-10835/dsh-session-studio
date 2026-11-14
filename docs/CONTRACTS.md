@@ -24,6 +24,15 @@
 
 客户端另可用实时事实覆盖：`running`、`pendingInteraction`、`completionUnread`，并按 PRD §3 的优先级重算状态；宿主不下发 `pendingInteraction`/`completionUnread`。
 
+### 行集与筛选口径（AIDEV-161）
+
+**筛选、统计卡、分组头、列表行必须是同一集合、同一条判定**：三处都只读 `rows`（宿主行 + 实时覆盖后 `decorateRows` 的 `status`），不许各自再算一份。因此口径问题的根都在「行集」上，一条 `rows` 之外的会话不可能被任一筛选或计数看见。
+
+- **子代理判定**：只有 `origin === 'subagent'` 算子代理（`host/sessions.js#isSubagent`，与原生 `sessionVisible` 同规则）。**分叉/派生会话带 `parentSessionId`，但它是一等会话**（原生侧栏照样列出）；按 `parentSessionId` 判子代理会把分叉会话从默认行集里整片隐藏 —— 过滤与计数随之少行，而侧栏仍显示它们（AIDEV-161 的现象：侧栏有运行中会话、面板「运行中」筛选为空）。`parentSessionId` 只用于层级展示，不参与可见性。
+- **行集是快照**：面板渲染的是一份宿主快照（`?includeArchived=true&includeSubagents=true`）。快照之后才开始的会话在快照里没有行，任何筛选/计数都匹配不到它，而实时 store 已知它 —— 因此面板比对 `unknownLiveSessionIds(rowsRaw, liveById, sessionsById)`，有未知 id 就重读一次语料；同 id 只问一次（`healAskedRef`），语料不认的 id 不会造成刷新循环。
+- **请求有截止时间**：`request()` 默认带 `REQUEST_TIMEOUT_MS = 15000` 的 `AbortSignal.timeout`；成功回调的清理放在 `finally` 里。这样「正在刷新…」只可能由一次会失败的加载驱动，不会因为一条永不返回的连接而常驻。
+
+
 ## 各模块接口（teammate 所有）
 
 ### host/status.js — 状态索引器

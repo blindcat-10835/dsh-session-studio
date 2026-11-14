@@ -109,9 +109,13 @@ function loadPlugin(options = {}) {
     console,
     setTimeout,
     clearTimeout,
+    AbortSignal,
+    AbortController,
     Date,
     Math,
     JSON,
+    AbortSignal: globalThis.AbortSignal,
+    AbortController: globalThis.AbortController,
     fetch: options.fetch || function () { throw new Error('the render smoke tests must not call fetch'); }
   };
   if (options.localStorage) {
@@ -602,6 +606,65 @@ test('pending interactions from any domain stay pending', () => {
   assert.equal(helpers.isPendingInteraction({ kind: 'plan-review' }), true);
   assert.equal(helpers.isPendingInteraction({ kind: 'question' }), true);
   assert.equal(helpers.isPendingInteraction({ kind: 'future-domain-kind' }), true);
+});
+
+/* ------------------------------------------------------------------ *
+ * AIDEV-161: the row set is the host snapshot; live-only ids must be healed
+ * ------------------------------------------------------------------ */
+
+test('unknownLiveSessionIds reports sessions the snapshot does not have', () => {
+  const rows = [{ id: 'known-a' }, { id: 'known-b' }];
+  assert.deepEqual(helpers.unknownLiveSessionIds(rows, {}, null), [], 'the live store knows nothing new');
+  assert.deepEqual(
+    helpers.unknownLiveSessionIds(rows, { 'known-a': { running: true }, 'new-c': { running: true } }, null),
+    ['new-c'],
+    'a run started after the snapshot is not a row yet'
+  );
+  assert.deepEqual(
+    helpers.unknownLiveSessionIds(rows, null, { 'known-b': {}, 'new-d': { running: true } }),
+    ['new-d'],
+    'the client session list is the second live source'
+  );
+  assert.deepEqual(
+    helpers.unknownLiveSessionIds(rows, { 'new-c': {} }, { 'new-c': {}, 'new-d': {} }),
+    ['new-c', 'new-d'],
+    'both sources merge without duplicates'
+  );
+  assert.deepEqual(helpers.unknownLiveSessionIds(null, { 'new-c': {} }, null), ['new-c'], 'an empty snapshot knows nothing');
+  assert.deepEqual(helpers.unknownLiveSessionIds(rows, null, null), [], 'a degraded live store asks for no reload');
+  assert.deepEqual(helpers.unknownLiveSessionIds(rows, { '': {} }, null), [], 'empty ids are ignored');
+});
+
+test('a host request that never answers is aborted at its deadline (AIDEV-161)', async () => {
+  // The "正在刷新…" bar lives exactly as long as one in-flight load. A keep-alive
+  // socket orphaned by a `dsh-web.service` restart answered nothing and never
+  // failed, so the bar never cleared. The deadline turns that into a reported
+  // failure; this stub settles only when the signal aborts.
+  const fetch = (url, init) => {
+    const signal = init && init.signal;
+    if (!signal) return Promise.reject(new Error('no deadline on the request'));
+    return new Promise((resolve, reject) => {
+      signal.addEventListener('abort', () => reject(signal.reason || new Error('aborted')));
+    });
+  };
+  const timed = loadPlugin({ fetch }).plugin;
+  assert.ok(timed.helpers.REQUEST_TIMEOUT_MS > 0, 'the default deadline is finite');
+  // AbortSignal.timeout unrefs its timer, so keep this realm's loop alive while
+  // the deadline fires (a live web page never needs the nudge).
+  const keepAlive = new Promise((done) => setTimeout(done, 200));
+  await assert.rejects(
+    timed.helpers.request('/sessions', { timeoutMs: 20 }),
+    (error) => Boolean(error) && error.code === 'network' && /abort|timeout/i.test(error.message),
+    'an unanswered request rejects instead of hanging the panel'
+  );
+  await keepAlive;
+});
+
+test('the panel heals an unknown live Session by re-reading the host corpus (AIDEV-161)', () => {
+  // The decision lives in unknownLiveSessionIds; this pins the wiring that acts
+  // on it, so deleting the effect (the reported regression) turns the suite red.
+  assert.match(SOURCE, /unknownLiveSessionIds\(rowsRaw, liveById, sessionsById\)/, 'the panel compares the live store to its snapshot');
+  assert.match(SOURCE, /healAskedRef/, 'a Session the corpus never reports must not reload forever');
 });
 
 /* ------------------------------------------------------------------ *

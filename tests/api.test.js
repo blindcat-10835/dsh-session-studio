@@ -59,6 +59,9 @@ const rows = [
   { id: 's1', updatedAt: 300, running: false, blank: false, cwd: '/repo/a', archived: false, pinned: false, origin: 'user' },
   { id: 's2', updatedAt: 200, running: true, blank: false, cwd: '/repo/a', archived: true, pinned: false, origin: 'user' },
   { id: 's3', updatedAt: 100, running: false, blank: false, cwd: '/repo/a', archived: false, pinned: false, origin: 'subagent', parentSessionId: 's1' },
+  // A fork carries parentSessionId too, but the native sidebar lists it: only
+  // origin === 'subagent' hides a Session (AIDEV-161).
+  { id: 's4', updatedAt: 400, running: false, blank: false, cwd: '/repo/a', archived: false, pinned: false, parentSessionId: 's1' },
 ]
 
 /** AI service stub whose hooks drive job progress the way host/ai.js does. */
@@ -163,7 +166,7 @@ test('state exposes settings, rules and indexing', async () => {
 test('sessions hides archived and subagent rows by default and decorates titles', async () => {
   const { api } = build()
   const value = await call(api, 'GET', '/sessions')
-  assert.deepEqual(value.rows.map((row) => row.id), ['s1'])
+  assert.deepEqual(value.rows.map((row) => row.id), ['s1', 's4'], 'the fork is listed; the origin-subagent is not')
   assert.equal(value.rows[0].title, '会话一')
   assert.equal(value.rows[0].workspaceTitle, '仓库 A')
   assert.equal(value.rows[0].lastTurnEnd, 'blocked')
@@ -172,8 +175,16 @@ test('sessions hides archived and subagent rows by default and decorates titles'
 test('sessions can include archived and subagent rows', async () => {
   const { api } = build()
   const value = await call(api, 'GET', '/sessions', undefined, { includeArchived: '1', includeSubagents: 'true' })
-  assert.deepEqual(value.rows.map((row) => row.id), ['s1', 's2', 's3'])
+  assert.deepEqual(value.rows.map((row) => row.id), ['s1', 's2', 's3', 's4'])
   assert.equal(value.rows[2].subagent, true)
+  assert.equal(value.rows[3].subagent, false, 'a forked Session is a first-class row')
+})
+
+test('a forked Session is listed even without subagents (AIDEV-161)', async () => {
+  const { api } = build()
+  const value = await call(api, 'GET', '/sessions')
+  assert.ok(value.rows.some((row) => row.id === 's4'), 'the fork must not be dropped as a subagent')
+  assert.ok(!value.rows.some((row) => row.id === 's3'), 'origin subagent stays behind the toggle')
 })
 
 test('session-meta answers the batch probe the native rows use', async () => {

@@ -21,7 +21,7 @@ const ROWS = [
   { id: 's1', running: false, blank: false, cwd: '/home/u/huawei-project', archived: false },
   { id: 's2', running: false, blank: false, cwd: '/tmp/x', archived: false },
   { id: 's3', running: false, blank: true, cwd: '/home/u/huawei-project', archived: false },
-  { id: 's4', running: false, blank: false, cwd: '/home/u/huawei-project', parentSessionId: 's1', archived: false },
+  { id: 's4', running: false, blank: false, cwd: '/home/u/huawei-project', origin: 'subagent', parentSessionId: 's1', archived: false },
   { id: 's5', running: false, blank: false, cwd: '/home/u/huawei-project', archived: true },
 ]
 

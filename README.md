@@ -4,8 +4,8 @@
 
 A session manager panel for the DSH Web GUI: browse your sessions grouped by **status (7 states) / time bucket / tag**, with tag rules, AI batch rename and AI auto-tagging (always preview-then-apply, slow work runs as background jobs), archive and trash. Row-level actions reuse the native sidebar's own context menu and row seats instead of inventing a parallel UI.
 
-[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.2.0-blue)](./package.json)
-[![tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)](./tests)
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.2.1-blue)](./package.json)
+[![tests](https://img.shields.io/badge/tests-253%20passing-brightgreen)](./tests)
 [![license](https://img.shields.io/badge/license-MIT-green)](./package.json)
 
 ![Session manager overview](./docs/images/01-overview.png)
@@ -161,7 +161,7 @@ curl -s -X POST localhost:3081/api/dsh-session-studio/jobs/<jobId>/cancel | jq '
 ## Known deviations and limits
 
 - **Delete means trash**: DSH has no session-delete API, so deleting moves the session directory into the plugin's trash and can be restored; erasing for real means cleaning `trash/` by hand (PRD D1).
-- **Subagent sessions are hidden by default** and never join a batch (D2).
+- **Subagent sessions are hidden by default** and never join a batch (D2). Only an explicit `origin: subagent` counts; a forked session keeps its `parentSessionId` and stays a first-class row, because the native sidebar lists it too (AIDEV-161).
 - **Tag grouping can double-count**: a session with several tags appears in several groups (D3).
 - **Failed / blocked / interrupted depend on the log-tail index**: the first load indexes historical sessions in the background (~185 sessions, ~237MB of compressed logs here). Until it finishes those sessions show as "completed" and refresh automatically afterwards (D6).
 - **An AI-renamed title pins the native auto-title**: in the official title semantics a "user" source blocks automatic refresh; the plugin also stores its own `titleLocked`, and only a manual rename sets it (ADR-0004).

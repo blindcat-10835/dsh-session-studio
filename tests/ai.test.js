@@ -23,7 +23,7 @@ const BASE_ROWS = [
   { id: 'sess-ok-2', running: false, blank: false, cwd: '/home/u/beta', archived: false },
   { id: 'sess-running', running: true, blank: false, cwd: '/home/u/alpha', archived: false },
   { id: 'sess-blank', running: false, blank: true, cwd: '/home/u/alpha', archived: false },
-  { id: 'sess-sub', running: false, blank: false, cwd: '/home/u/alpha', parentSessionId: 'sess-ok-1', archived: false },
+  { id: 'sess-sub', running: false, blank: false, cwd: '/home/u/alpha', origin: 'subagent', parentSessionId: 'sess-ok-1', archived: false },
   { id: 'sess-locked', running: false, blank: false, cwd: '/home/u/gamma', archived: false },
   { id: 'sess-archived', running: false, blank: false, cwd: '/home/u/delta', archived: true },
 ]
@@ -171,6 +171,24 @@ test('previewRename skips Sessions with a reason, never sends them, and writes n
   assert.equal(store.version, versionBefore)
 })
 
+test('a forked Session joins the AI batch while an origin-subagent is skipped (AIDEV-161)', async () => {
+  const transport = echoRenameTransport()
+  const { service } = makeEnv({
+    transport,
+    agentDefaultModel: selectModel(),
+    rows: [
+      { id: 'sess-parent', running: false, blank: false, cwd: '/home/u/alpha', archived: false },
+      { id: 'sess-fork', running: false, blank: false, cwd: '/home/u/alpha', parentSessionId: 'sess-parent', archived: false },
+      { id: 'sess-child', running: false, blank: false, cwd: '/home/u/alpha', origin: 'subagent', parentSessionId: 'sess-parent', archived: false },
+    ],
+  })
+
+  const preview = await service.previewRename({ sessionIds: ['sess-parent', 'sess-fork', 'sess-child'] })
+  const byId = new Map(preview.items.map((item) => [item.sessionId, item]))
+  assert.equal(byId.get('sess-fork').skipReason, null, 'a branch is a normal Session')
+  assert.equal(byId.get('sess-child').skipReason, 'subagent')
+})
+
 test('previewRename preserves the requested order', async () => {
   const { service } = makeEnv({ transport: echoRenameTransport(), agentDefaultModel: selectModel() })
   const preview = await service.previewRename({ sessionIds: ['sess-ok-2', 'sess-ok-1'] })
@@ -257,9 +275,13 @@ test('unparsable model output marks only that batch as failed', async () => {
 test('a transport that never answers hits the overall timeout', async () => {
   const transport = { complete: () => new Promise(() => {}) }
   const { service } = makeEnv({ transport, agentDefaultModel: selectModel(), timeoutMs: 150 })
+  // The budget timer is unref'd so a job never keeps the process alive; the
+  // test realm therefore needs a live timer of its own until the budget fires.
+  const keepAlive = new Promise((done) => setTimeout(done, 400))
   const preview = await service.previewRename({ sessionIds: ['sess-ok-1'] })
   assert.equal(preview.items[0].skipReason, 'timeout')
   assert.equal(preview.failed, 1)
+  await keepAlive
 })
 
 test('previewRename truncates at maxSessionsPerRun', async () => {

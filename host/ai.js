@@ -16,6 +16,7 @@
 import path from 'node:path'
 
 import { StateError, TITLE_MAX_LENGTH, normalizeTag, normalizeTags } from './store.js'
+import { isSubagent } from './sessions.js'
 
 /** Closed intent vocabulary (CONTEXT.md "意图"). */
 export const INTENTS = Object.freeze(['开发', '排查', '调研', '文档', '运维', '其它'])
@@ -524,14 +525,12 @@ export function createAiService({
     return out
   }
 
-  const isSubagentRow = (row) => Boolean(row?.parentSessionId) || row?.origin === 'subagent'
-
   /** Single source of truth for the skip rules; used by preview *and* apply. */
   function skipFor(row, record, { forRename, includeArchived = false }) {
     if (!row) return SKIP_REASONS.missing
     if (row.running) return SKIP_REASONS.running
     if (row.blank) return SKIP_REASONS.blank
-    if (isSubagentRow(row)) return SKIP_REASONS.subagent
+    if (isSubagent(row)) return SKIP_REASONS.subagent
     if (row.archived && !includeArchived) return SKIP_REASONS.archived
     if (forRename && record?.titleLocked) return SKIP_REASONS.titleLocked
     return null

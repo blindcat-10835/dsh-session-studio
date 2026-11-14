@@ -15,6 +15,7 @@
 import crypto from 'node:crypto'
 
 import { StateError, normalizeTags } from './store.js'
+import { isSubagent } from './sessions.js'
 
 /** Fields a rule may match on. Order is also the order used for evidence. */
 export const RULE_FIELDS = Object.freeze(['title', 'firstMessage', 'cwd', 'note'])
@@ -140,10 +141,6 @@ function normalizeStored(rule) {
   }
 }
 
-function isSubagentRow(row) {
-  return Boolean(row?.parentSessionId) || row?.origin === 'subagent'
-}
-
 /** Human-readable evidence, ordered by field; the client renders it as text. */
 const FIELD_LABELS = Object.freeze({ title: '标题', firstMessage: '首条消息', cwd: '工作目录', note: '备注' })
 
@@ -252,7 +249,7 @@ export function createRuleService({ store, sessions, tags, statusIndex, logger }
     const rule = normalizeRule(input)
     const rows = await sessions.list()
     const candidates = (Array.isArray(rows) ? rows : []).filter(
-      (row) => row && typeof row.id === 'string' && !row.blank && !isSubagentRow(row) && (includeArchived || !row.archived),
+      (row) => row && typeof row.id === 'string' && !row.blank && !isSubagent(row) && (includeArchived || !row.archived),
     )
     const total = candidates.length
     const scanLimit = Number.isFinite(Number(limit)) && Number(limit) > 0 ? Math.trunc(Number(limit)) : null
@@ -358,7 +355,7 @@ export function createRuleService({ store, sessions, tags, statusIndex, logger }
 
     await mapPool(wanted, concurrency(), async (id) => {
       const row = rowById.get(id)
-      if (!row || row.blank || isSubagentRow(row)) return
+      if (!row || row.blank || isSubagent(row)) return
       const record = store.sessionOf(id)
       const sources = { cwd: asText(row.cwd), note: asText(record.note) }
       if (needFacts) {

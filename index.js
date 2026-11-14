@@ -24,7 +24,7 @@ export const name = 'session-studio'
 /** Route carrier, trust fence, and tool registry. */
 export const inject = ['webServer', 'connection', 'tools']
 
-export const VERSION = '1.2.0'
+export const VERSION = '1.2.1'
 
 function asRecord(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value) ? value : {}

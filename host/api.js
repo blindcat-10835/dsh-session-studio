@@ -7,6 +7,8 @@
  * is testable without a socket; handle() is the thin Node req/res adapter.
  */
 
+import { isSubagent } from './sessions.js'
+
 export const API_PREFIX = '/api/dsh-session-studio'
 const MAX_BODY = 2 * 1024 * 1024
 /** Sessions per AI job (PRD §6 batch cap). */
@@ -172,7 +174,7 @@ export function createApi({ store, sessions, statusIndex, tags, rules, ai, trash
     const rows = []
     const missing = []
     for (const item of corpus) {
-      const subagent = item.origin === 'subagent' || Boolean(item.parentSessionId)
+      const subagent = isSubagent(item)
       if (subagent && !includeSubagents) continue
       if (item.archived && !includeArchived) continue
       if (trashed.has(item.id)) continue

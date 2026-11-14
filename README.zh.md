@@ -4,8 +4,8 @@
 
 DSH Web 的会话管理面板：把会话按**状态（7 档：待处理/运行中/阻塞/失败/已完成未读/中断/完成）/ 时间桶 / 标签**分组浏览，支持标签规则、AI 批量重命名、AI 自动打标签（一律先预览-应用，慢操作以后台任务运行）、归档与回收站；行级操作复用原生左栏自己的右键菜单与行座位，不另起一套交互。
 
-[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.2.0-blue)](./package.json)
-[![tests](https://img.shields.io/badge/tests-233%20passing-brightgreen)](./tests)
+[![DSH plugin](https://img.shields.io/badge/DSH-plugin-1.2.1-blue)](./package.json)
+[![tests](https://img.shields.io/badge/tests-253%20passing-brightgreen)](./tests)
 [![license](https://img.shields.io/badge/license-MIT-green)](./package.json)
 
 ![会话管理面板总览](./docs/images/01-overview.png)
@@ -161,7 +161,7 @@ curl -s -X POST localhost:3081/api/dsh-session-studio/jobs/<jobId>/cancel | jq '
 ## 已知偏离与限制
 
 - **删除 = 回收站**：DSH 没有会话删除 API，删除动作把会话目录移入插件回收站并可恢复；真正抹除需要手工清理 `trash/`（PRD D1）。
-- **子代理会话默认不显示**，且永不参与批量操作（D2）。
+- **子代理会话默认不显示**，且永不参与批量操作（D2）。只有显式 `origin: subagent` 才算子代理；分叉会话带 `parentSessionId` 但仍是普通行 —— 原生侧栏也照样列出它（AIDEV-161）。
 - **按标签分组时会话可能重复计数**：一个会话有多个标签就会出现在多个组（D3）。
 - **失败/阻塞/中断依赖日志尾部索引**：首次加载会后台索引历史会话（本机 185 个、约 237MB 压缩日志），索引完成前这些会话先按“已完成”展示，完成后自动刷新（D6）。
 - **AI 改过的标题会钉住原生自动标题**：官方标题语义里“用户来源”的标题会阻止自动刷新；插件另存 `titleLocked`，只有手动改名才算锁定（ADR-0004）。

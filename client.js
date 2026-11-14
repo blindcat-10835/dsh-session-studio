@@ -265,6 +265,14 @@ window.__ModuleLoader__.load({
     var JOB_TYPE_IDS = ['ai.rename', 'rename.apply', 'ai.tags', 'tags.fillMissing'];
     var JOB_POLL_MS = 800;
     var REFRESH_MERGE_MS = 1500;
+    /**
+     * AIDEV-161: ceiling on one JSON request. The panel's "正在刷新…" bar is
+     * driven by a single in-flight load; a fetch that never settles (a
+     * keep-alive socket orphaned by a `dsh-web.service` restart, a wedged
+     * route) left it up forever. The deadline turns that into a reported
+     * failure, which clears the bar.
+     */
+    var REQUEST_TIMEOUT_MS = 15000;
 
     /** Job and value routes carry an id, so they are built rather than tabled. */
     function jobPath(id) { return API_PATHS.jobs + '/' + encodeURIComponent(String(id)); }
@@ -401,6 +409,37 @@ window.__ModuleLoader__.load({
         if (status && counts[status] !== undefined) counts[status] += 1;
       }
       return counts;
+    }
+
+    /**
+     * Session ids the live client store knows that the host snapshot does not.
+     *
+     * The panel renders one host snapshot at a time (the corpus is fetched, not
+     * derived), so a Session that started after that fetch has no row at all:
+     * no group, no count, and no status filter can ever match it, even though
+     * the native sidebar shows it running. The live store always knows those
+     * ids, so the panel re-reads the corpus when this reports any — the host
+     * stays the single source of the row set that filters, cards and groups
+     * share.
+     */
+    function unknownLiveSessionIds(rows, liveById, sessionsById) {
+      var known = {};
+      var list = Array.isArray(rows) ? rows : [];
+      for (var index = 0; index < list.length; index += 1) {
+        var row = list[index];
+        if (row && typeof row.id === 'string' && row.id) known[row.id] = true;
+      }
+      var missing = [];
+      var record = function (id) {
+        if (typeof id !== 'string' || id === '') return;
+        if (known[id] || missing.indexOf(id) >= 0) return;
+        missing.push(id);
+      };
+      var map = liveById || {};
+      for (var key in map) if (Object.prototype.hasOwnProperty.call(map, key)) record(key);
+      var byId = sessionsById || null;
+      if (byId) for (var id in byId) if (Object.prototype.hasOwnProperty.call(byId, id)) record(id);
+      return missing;
     }
 
     function makeGroup(key, labelKey, label, rows) {
@@ -1920,6 +1959,10 @@ window.__ModuleLoader__.load({
         cache: 'no-store'
       };
       if (init.body !== undefined) merged.body = init.body;
+      var timeoutMs = typeof init.timeoutMs === 'number' && init.timeoutMs >= 0 ? init.timeoutMs : REQUEST_TIMEOUT_MS;
+      if (timeoutMs > 0 && typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+        merged.signal = AbortSignal.timeout(timeoutMs);
+      }
       return fetch(API_PREFIX + path, merged).then(function (response) {
         return response.text().then(function (text) {
           var body = null;
@@ -3143,17 +3186,24 @@ window.__ModuleLoader__.load({
         if (!silent) setRefreshing(true);
         var sessionsPath = API_PATHS.sessions + '?includeArchived=true&includeSubagents=true';
         return Promise.all([request(sessionsPath), request(API_PATHS.state)]).then(function (pair) {
-          var sessionBody = pair[0] || {};
-          var nextRows = Array.isArray(sessionBody.rows) ? sessionBody.rows : [];
-          var nextIndexing = sessionBody.indexing || (pair[1] && pair[1].indexing) || null;
-          var nextMeta = pair[1] || null;
-          rememberPanel(nextRows, nextMeta, nextIndexing);
-          setRowsRaw(nextRows);
-          setIndexing(nextIndexing);
-          setMeta(nextMeta);
-          setError(null);
-          setPhase('ready');
-          setRefreshing(false);
+          try {
+            var sessionBody = pair[0] || {};
+            var nextRows = Array.isArray(sessionBody.rows) ? sessionBody.rows : [];
+            var nextIndexing = sessionBody.indexing || (pair[1] && pair[1].indexing) || null;
+            var nextMeta = pair[1] || null;
+            rememberPanel(nextRows, nextMeta, nextIndexing);
+            setRowsRaw(nextRows);
+            setIndexing(nextIndexing);
+            setMeta(nextMeta);
+            setError(null);
+            setPhase('ready');
+          } catch (error) {
+            // AIDEV-161: never leave the bar up because applying a response blew
+            // up; report it like any other failed load instead.
+            setNotice({ kind: 'error', text: tf('notice.failed', { message: error && error.message ? error.message : String(error) }) });
+          } finally {
+            setRefreshing(false);
+          }
         }, function (cause) {
           setRefreshing(false);
           var message = cause && cause.message ? cause.message : String(cause);
@@ -3260,6 +3310,35 @@ window.__ModuleLoader__.load({
         });
         return decorateRows(merged, liveById, now);
       }, [rowsRaw, liveById, sessionsById]);
+
+      /* Ids already asked for, so a Session the host corpus never reports cannot
+       * turn this into a reload loop; cleared once the snapshot catches up. */
+      var healAskedRef = useRef({});
+
+      /**
+       * A Session that appeared after the last host snapshot (a run started in
+       * another window, an import) has no row here, so filters, cards and
+       * groups all miss it while the native sidebar shows it running. Re-read
+       * the corpus rather than synthesizing a row: one snapshot stays the only
+       * source the three views share.
+       */
+      useEffect(function () {
+        if (phase !== 'ready') return;
+        var missing = unknownLiveSessionIds(rowsRaw, liveById, sessionsById);
+        if (missing.length === 0) {
+          healAskedRef.current = {};
+          return;
+        }
+        var asked = healAskedRef.current || {};
+        var fresh = false;
+        for (var index = 0; index < missing.length; index += 1) {
+          if (asked[missing[index]]) continue;
+          asked[missing[index]] = true;
+          fresh = true;
+        }
+        healAskedRef.current = asked;
+        if (fresh) scheduleRefresh();
+      }, [phase, rowsRaw, liveById, sessionsById]);
 
       var baseRows = useMemo(function () {
         return filterRows(rows, { archiveView: archiveView, showSubagents: showSubagents, filters: {} });
@@ -6231,6 +6310,9 @@ window.__ModuleLoader__.load({
         isPendingInteraction: isPendingInteraction,
         bucketOf: bucketOf,
         decorateRows: decorateRows,
+        unknownLiveSessionIds: unknownLiveSessionIds,
+        request: request,
+        REQUEST_TIMEOUT_MS: REQUEST_TIMEOUT_MS,
         withoutAcceptedTags: withoutAcceptedTags,
         matchesSearch: matchesSearch,
         filterRows: filterRows,

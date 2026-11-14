@@ -86,6 +86,18 @@ export function foldFacts(headEvents, tailEvents) {
   return facts
 }
 
+/**
+ * Native visibility rule (dsh-client-ui-workspace `sessionVisible`): only an
+ * explicit `origin === 'subagent'` is a subagent. A forked/branched Session
+ * also carries `parentSessionId` (`isSeeded`, delegationDepth 0), but the
+ * sidebar lists it as a first-class Session — hiding it here would make the
+ * panel's row set, and every filter and count computed over it, disagree with
+ * the sidebar itself (AIDEV-161).
+ */
+export function isSubagent(session) {
+  return session?.origin === 'subagent'
+}
+
 export function createSessionSource({ ctx, logger, settings }) {
   const warn = (message) => logger?.warn?.('session-studio: ' + message)
 

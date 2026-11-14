@@ -9,6 +9,7 @@
  */
 
 import { StateError, normalizeTags } from './store.js'
+import { isSubagent } from './sessions.js'
 
 export const TAG_OPERATIONS = ['append', 'replace', 'clear']
 
@@ -320,7 +321,7 @@ export function createTagService({ store, sessions, logger, statusIndex } = {}) 
       // A blank Session cannot carry tags; a subagent or archived Session never
       // joins a batch (PRD batch skip rules).
       if (row.blank) continue
-      if (row.parentSessionId) continue
+      if (isSubagent(row)) continue
       if (row.archived) continue
       const record = store.sessionOf(row.id)
       if ((record.tags ?? []).length > 0) continue
